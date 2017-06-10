@@ -19,7 +19,7 @@ JRRtfExporter = autoclass('net.sf.jasperreports.engine.export.JRRtfExporter')
 JRHtmlExporter = autoclass('net.sf.jasperreports.engine.export.JRHtmlExporter')
 JRTextExporter = autoclass('net.sf.jasperreports.engine.export.JRTextExporter')
 JRTextExporterParameter = autoclass('net.sf.jasperreports.engine.export.JRTextExporterParameter')
-JRXlsExporter = autoclass('net.sf.jasperreports.engine.export.JRXlsExporter')
+#JRXlsExporter = autoclass('net.sf.jasperreports.engine.export.JRXlsExporter')
 JasperCompileManager = autoclass('net.sf.jasperreports.engine.JasperCompileManager')
 
 TMPDIR = '/tmp/pyJasper'
@@ -136,12 +136,12 @@ class JasperInterface:
         rtf_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
         rtf_exporter.exportReport()
 
-    def _generate_xls(self, jasper_print, output_filename):
-        """Generate XLS output."""
-        xls_exporter = JRXlsExporter()
-        xls_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
-        xls_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
-        xls_exporter.exportReport()
+#    def _generate_xls(self, jasper_print, output_filename):
+#        """Generate XLS output."""
+#        xls_exporter = JRXlsExporter()
+#        xls_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
+#        xls_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
+#        xls_exporter.exportReport()
 
     def _generate_csv(self, jasper_print, output_filename):
         """Generate CSV output."""
