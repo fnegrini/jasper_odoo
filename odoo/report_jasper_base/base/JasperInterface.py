@@ -9,7 +9,16 @@ import random
 
 from jnius import autoclass
 
+# Java DataTypes
+JMap       = autoclass('java.util.HashMap')
+JArrayList = autoclass('java.util.ArrayList')
+JInt       = autoclass('java.lang.Integer')
+JLong      = autoclass('java.lang.Long')
+JFloat     = autoclass('java.lang.Float')
+JDouble    = autoclass('java.lang.Double')
+JString    = autoclass('java.lang.String')
 
+#JasperReport Classes
 JRExporterParameter = autoclass('net.sf.jasperreports.engine.JRExporterParameter')
 JasperExportManager = autoclass('net.sf.jasperreports.engine.JasperExportManager')
 JasperFillManager = autoclass('net.sf.jasperreports.engine.JasperFillManager')
@@ -21,11 +30,10 @@ JRTextExporter = autoclass('net.sf.jasperreports.engine.export.JRTextExporter')
 JRTextExporterParameter = autoclass('net.sf.jasperreports.engine.export.JRTextExporterParameter')
 #JRXlsExporter = autoclass('net.sf.jasperreports.engine.export.JRXlsExporter')
 JasperCompileManager = autoclass('net.sf.jasperreports.engine.JasperCompileManager')
+JasperDesign = autoclass('net.sf.jasperreports.engine.design.JasperDesign')
+JRXmlLoader = autoclass('net.sf.jasperreports.engine.xml.JRXmlLoader')
 
 TMPDIR = '/tmp/pyJasper'
-
-__revision__ = '$Revision$'
-
 
 def ensure_dirs(dirlist):
     """Ensure that a dir and all it's parents exist."""
@@ -38,43 +46,46 @@ def gen_uuid():
     """Generates an hopfully unique ID."""
     return md5.new("%s-%f" % (time.time(), random.random())).hexdigest()
     
-
+    
 class JasperInterface:
     """This is the new style pyJasper Interface"""
     
-    def __init__(self, designdatalist, xpath):
+    def __init__(self, designdata, xpath, tempdir = TMPDIR):
         """Constructor
         designdatalist: a dict {"template_var_name": "JRXML data"}.
         xpath:      The xpath expression passed to the report.
         """
+        self.xpath = xpath
+        self.tempdir = tempdir
         # depreciation check
         if isinstance(designdatalist, basestring):
             #warnings.warn("Passing the JRXML data as a string is deprecated. Use a dict of JRXML strings with template_var_name as key.", DeprecationWarning)
             # fix it anyway
-            designdatalist = {'main': designdatalist}
+            designdatalist = {'main': designdata}
 
         # Compile design if compiled version doesn't exist
         self.compiled_design = {}
+        self.design_object = {}
         for design_name in designdatalist:
-            self.compiled_design[design_name] = self._update_design(designdatalist[design_name])
+            self.design_object = 
+            self.compiled_design[design_name] = self._update_design(designdata[design_name])
 
-        self.xpath = xpath
     
     def _update_design(self, designdata):
         """Compile the report design if needed."""
-        designdata_hash = md5.new(designdata.encode('utf-8')).hexdigest()
-        sourcepath = os.path.join(TMPDIR, 'reports')
-        destinationpath = os.path.join(TMPDIR, 'compiled-reports')
-        ensure_dirs([sourcepath, destinationpath])
-        source_design = os.path.join(sourcepath, designdata_hash + '.jrxml')
-        compiled_design = os.path.join(destinationpath, designdata_hash + '.jasper')
+        #designdata_hash = md5.new(designdata.encode('utf-8')).hexdigest()
+        #sourcepath = os.path.join(self.tempdir, 'reports')
+        #destinationpath = os.path.join(self.tempdir, 'compiled-reports')
+        #ensure_dirs([sourcepath, destinationpath])
+        #source_design = os.path.join(sourcepath, designdata_hash + '.jrxml')
+        #compiled_design = os.path.join(destinationpath, designdata_hash + '.jasper')
         
-        if not os.path.exists(compiled_design):
-            sys.stderr.write("generating report %s\n" % compiled_design)
-            uuid = gen_uuid()
-            fdesc = open(source_design, 'w')
-            fdesc.write(designdata.encode('utf-8'))
-            fdesc.close()
+        #if not os.path.exists(compiled_design):
+        #    sys.stderr.write("generating report %s\n" % compiled_design)
+        #    uuid = gen_uuid()
+        #    fdesc = open(source_design, 'w')
+        #    fdesc.write(designdata.encode('utf-8'))
+         #   fdesc.close()
             JasperCompileManager.compileReportToFile(source_design, compiled_design + uuid)
             os.rename(compiled_design + uuid, compiled_design)
 
@@ -83,8 +94,8 @@ class JasperInterface:
     def generate(self, xmldata, output_type='pdf'):
         """Generate Output with JasperReports."""
         start = time.time()
-        xmlpath = os.path.join(TMPDIR, 'xml')
-        outputpath = os.path.join(TMPDIR, 'output')
+        xmlpath = os.path.join(self.tempdir, 'xml')
+        outputpath = os.path.join(self.tempdir, 'output')
         oid = "%s-%s" % (md5.new(xmldata).hexdigest(), gen_uuid())
         ensure_dirs([xmlpath, outputpath])
         xmlfile = os.path.join(xmlpath, oid + '.xml')
@@ -115,8 +126,8 @@ class JasperInterface:
             output_file.close()
         elif output_type == 'rtf':
             self.generate_rtf(jasper_print, output_filename)
-        elif output_type == 'xls':
-            self._generate_xls(jasper_print, output_filename)
+        #elif output_type == 'xls':
+        #    self._generate_xls(jasper_print, output_filename)
         elif output_type == 'csv':
             self._generate_csv(jasper_print, output_filename)
         elif output_type == 'text':
