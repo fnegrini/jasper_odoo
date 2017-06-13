@@ -9,5 +9,5 @@ from JasperInterface import JasperInterface
 from jnius import autoclass
 
 if __name__ == '__main__':
-    jasper = JasperInterface('sample_01.jrxml', '', '/tmp/jaspertmp')
-    open('./sample_01.pdf', 'wb').write(jasper.generate([], 'pdf'))
+    jasper = JasperInterface(open('sample_01.jrxml').read(), '', './')
+    open('./sample_01.pdf', 'wb').write(jasper.generate('<dummy/>'))
