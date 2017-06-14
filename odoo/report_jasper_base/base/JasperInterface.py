@@ -18,15 +18,16 @@ JFloat     = autoclass('java.lang.Float')
 JDouble    = autoclass('java.lang.Double')
 JString    = autoclass('java.lang.String')
 
+
 # Java base classes
-InputStream = autoclass('java.io.InputStream')
 File = autoclass('java.io.File')
+ByteArrayInputStream = autoclass('java.io.ByteArrayInputStream')
 
 #JasperReport Classes
 JRExporterParameter = autoclass('net.sf.jasperreports.engine.JRExporterParameter')
 JasperExportManager = autoclass('net.sf.jasperreports.engine.JasperExportManager')
 JasperFillManager = autoclass('net.sf.jasperreports.engine.JasperFillManager')
-JRXmlDataSource = autoclass('net.sf.jasperreports.engine.data.JRXmlDataSource')
+JsonDataSource = autoclass('net.sf.jasperreports.engine.data.JsonDataSource')
 JasperCompileManager = autoclass('net.sf.jasperreports.engine.JasperCompileManager')
 JasperDesign = autoclass('net.sf.jasperreports.engine.design.JasperDesign')
 JRXmlLoader = autoclass('net.sf.jasperreports.engine.xml.JRXmlLoader')
@@ -51,16 +52,19 @@ def stream_to_java_file(tempdir, stream):
     file = File(tmp_filename)
     return file
     
+def stream_to_java_stream(stream):
+    return ByteArrayInputStream(stream)   
     
 class JasperInterface:
     """This is the new style pyJasper Interface"""
     
-    def __init__(self, designdatalist, xpath, tempdir = TMPDIR):
+    def __init__(self, designdatalist, tempdir = TMPDIR):
         """Constructor
         designdatalist: a dict {"template_var_name": "JRXML data content"}.
-        xpath:      The xpath expression passed to the report.
+        
+        tempdir: a temporary directory to read and write files
         """
-        self.xpath = xpath
+        
         self.tempdir = tempdir
         # depreciation check
         if isinstance(designdatalist, basestring):
@@ -88,7 +92,7 @@ class JasperInterface:
         compiled = JasperCompileManager.compileReport(designobject)
         return compiled
     
-    def generate(self, xmldata):
+    def generate(self, jsondata):
         """Generate Output with JasperReports."""
 
         # convert to a java.util.Map so it can be passed as parameters
@@ -96,14 +100,24 @@ class JasperInterface:
         for i in self.compiled_design:
             map.put(i, self.compiled_design[i])
         
-        xmlfile = stream_to_java_file(self.tempdir, xmldata)
-        
-        datasource = JRXmlDataSource(xmlfile)
-        # add the original xml document source so subreports can make a new datasource.
-        map['XML_FILE'] = xmlfile
+        # create datasource        
+        jsonfile = stream_to_java_file(self.tempdir, jsondata)
+        datasource = JsonDataSource(jsonfile)
 
+        # passing base parameters
+        map.put('net.sf.jasperreports.json.date.pattern', 'yyyy-MM-dd')
+        map.put('net.sf.jasperreports.json.number.pattern', '#,##0.##')
+        map.put("datasource", datasource)
+        
+        # generate report to file
         jasper_print = JasperFillManager.fillReport(self.compiled_design['main'], map, datasource)
-        output = JasperExportManager.exportReportToPdf(jasper_print)
-        xmlfile.delete()
+        tmp_filename = os.path.join(self.tempdir, gen_uuid() + '.pdf')
+        JasperExportManager.exportReportToPdfFile(jasper_print, tmp_filename)
+        jsonfile.delete()
+        
+        # export pdf stream and delete temporary file
+        output = open(tmp_filename).read()
+        os.remove(tmp_filename)
+        
         return output
         
