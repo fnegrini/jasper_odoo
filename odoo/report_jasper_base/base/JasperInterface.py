@@ -103,11 +103,11 @@ class JasperInterface:
         # create datasource        
         jsonfile = stream_to_java_file(self.tempdir, jsondata)
         datasource = JsonDataSource(jsonfile)
-
+        
         # passing base parameters
         map.put('net.sf.jasperreports.json.date.pattern', 'yyyy-MM-dd')
         map.put('net.sf.jasperreports.json.number.pattern', '#,##0.##')
-        map.put("datasource", datasource)
+        map.put('net.sf.jasperreports.json.source', jsonfile.toString())
         
         # generate report to file
         jasper_print = JasperFillManager.fillReport(self.compiled_design['main'], map, datasource)
