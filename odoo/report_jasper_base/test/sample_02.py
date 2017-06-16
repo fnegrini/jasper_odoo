@@ -2,19 +2,30 @@
 
 import os
 import sys
+import json
 
 sys.path.insert(0, '../base')
 from JasperInterface import JasperInterface
-
 from jnius import autoclass
+
+JRXML_MAIN_FILE = 'CustomersReport.jrxml'
+JRXML_SUB_FILE = 'OrdersReport.jrxml'
+JSON_FILE = 'northwind.json'
+PDF_FILE  = 'CustomersReport.pdf'
+TMP_DIRECTORY = '/var/jaspertemp'
 
 if __name__ == '__main__':
     files = {}
-    files['main'] = open('JsonCustomersReport.jrxml').read()
-    files['JsonOrdersReport.jrxml'] = open('JsonOrdersReport.jrxml').read()
+    files['main'] = open(JRXML_MAIN_FILE).read()
+    files[JRXML_SUB_FILE] = open(JRXML_SUB_FILE).read()
     
-    jasper = JasperInterface(files, './')
+    jasper = JasperInterface(files, TMP_DIRECTORY)
     
-    jsonstream = open('northwind.json').read()
+    json_dict = json.load(open(JSON_FILE))
     
-    open('./sample_01.pdf', 'wb').write(jasper.generate(jsonstream))
+    try:
+        os.remove(PDF_FILE)
+    except:
+        pass
+    
+    open(PDF_FILE, 'wb').write(jasper.generate(json_dict))
