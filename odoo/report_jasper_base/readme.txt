@@ -25,4 +25,7 @@ The sample below is an example for a jaspertemp folder created in "/var/" direct
 #sudo chown odoo:odoo /var/jaspertemp
 #sudo chmod 777 /var/jaspertemp
 
+4. Design basics
+4.1. SubReports will be passed as parameters, so you need to create a parameter with type java.lang.Object and name matching the Subreport name
+4.2. DataSources should have the name format: /odoo/model*/item - *Model name will replace "." by "_"
 

@@ -5,6 +5,7 @@
 	<style name="Sans_Normal" isDefault="true" fontName="DejaVu Sans" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Bold" fontName="DejaVu Sans" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Sans_Italic" fontName="DejaVu Sans" fontSize="12" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<parameter name="OrdersReport" class="java.lang.Object"/>
 	<queryString language="xPath">
 		<![CDATA[/Northwind/Customers/item]]>
 	</queryString>
@@ -69,7 +70,7 @@
 				<subreportParameter name="CustomerID">
 					<subreportParameterExpression><![CDATA[$F{CustomerID}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportExpression><![CDATA["OrdersReport.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{OrdersReport}]]></subreportExpression>
 			</subreport>
 			<textField>
 				<reportElement style="Sans_Bold" x="109" y="5" width="291" height="15" isPrintWhenDetailOverflows="true" uuid="ded07e37-4c41-4617-9f13-8a819cc1e745"/>

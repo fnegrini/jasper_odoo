@@ -116,6 +116,7 @@ class JasperInterface:
         map.put('XML_DATA_DOCUMENT', xml_document)
         map.put('XML_DATE_PATTERN', 'yyyy-MM-dd')
         map.put('XML_NUMBER_PATTERN', '#,##0.##')
+        map.put('net.sf.jasperreports.xpath.executer.factory', 'net.sf.jasperreports.engine.util.xml.JaxenXPathExecuterFactory')
 
         
         # generate report to file

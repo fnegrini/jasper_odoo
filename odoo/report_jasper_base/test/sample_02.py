@@ -10,6 +10,7 @@ from jnius import autoclass
 
 JRXML_MAIN_FILE = 'CustomersReport.jrxml'
 JRXML_SUB_FILE = 'OrdersReport.jrxml'
+JASPER_SUB_FILE = 'OrdersReport'
 JSON_FILE = 'northwind.json'
 PDF_FILE  = 'CustomersReport.pdf'
 TMP_DIRECTORY = '/var/jaspertemp'
@@ -17,7 +18,7 @@ TMP_DIRECTORY = '/var/jaspertemp'
 if __name__ == '__main__':
     files = {}
     files['main'] = open(JRXML_MAIN_FILE).read()
-    files[JRXML_SUB_FILE] = open(JRXML_SUB_FILE).read()
+    files[JASPER_SUB_FILE] = open(JRXML_SUB_FILE).read()
     
     jasper = JasperInterface(files, TMP_DIRECTORY)
     
