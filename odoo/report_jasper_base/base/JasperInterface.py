@@ -37,6 +37,12 @@ JasperDesign = autoclass('net.sf.jasperreports.engine.design.JasperDesign')
 JRXmlLoader = autoclass('net.sf.jasperreports.engine.xml.JRXmlLoader')
 JRXmlUtils  = autoclass('net.sf.jasperreports.engine.util.JRXmlUtils')
 
+JRCsvExporter = autoclass('net.sf.jasperreports.engine.export.JRCsvExporter')
+JRRtfExporter = autoclass('net.sf.jasperreports.engine.export.JRRtfExporter')
+JRHtmlExporter = autoclass('net.sf.jasperreports.engine.export.JRHtmlExporter')
+JRTextExporter = autoclass('net.sf.jasperreports.engine.export.JRTextExporter')
+JRTextExporterParameter = autoclass('net.sf.jasperreports.engine.export.JRTextExporterParameter')
+
 TMPDIR = '/tmp/pyJasper'
 
 def ensure_dirs(dirlist):
@@ -59,46 +65,44 @@ def stream_to_java_file(tempdir, stream):
     
 def stream_to_java_stream(stream):
     return ByteArrayInputStream(stream)   
+
+def compile_jrxml(tempdir, designdata):
+    xml = parseString(designdata)
+    file = stream_to_java_file(tempdir, xml.toprettyxml())
+    design = JasperDesign()
+    design = JRXmlLoader.load(file)
+    file.delete()
+    compiled = JasperCompileManager.compileReport(design)
+    return compiled
+    
     
 class JasperInterface:
     """This is the new style pyJasper Interface"""
     
-    def __init__(self, designdatalist, tempdir = TMPDIR):
+    def __init__(self, designdatalist, compiled_design = {}, tempdir = TMPDIR):
         """Constructor
         designdatalist: a dict {"template_var_name": "JRXML data content"}.
-        
+        compiled_design: a dict {"template_var_name: "JASPER data content"}.
+          If not supplied, the related design will be compiled
         tempdir: a temporary directory to read and write files
         """
         
         self.tempdir = tempdir
-        # depreciation check
+
         if isinstance(designdatalist, basestring):
             #warnings.warn("Passing the JRXML data as a string is deprecated. Use a dict of JRXML strings with template_var_name as key.", DeprecationWarning)
             # fix it anyway
             designdatalist = {'main': designdatalist}
 
         # Compile design if compiled version doesn't exist
-        self.compiled_design = {}
+        self.compiled_design = compiled_design
         self.design_object = {}
         
         for design_name in designdatalist:
-            self.design_object[design_name] = self._generate_design(designdatalist[design_name])
-            self.compiled_design[design_name] = self._compile_design(self.design_object[design_name])
-
-    def _generate_design(self, designdata):
-        xml = parseString(designdata)
-        file = stream_to_java_file(self.tempdir, xml.toprettyxml())
-        design = JasperDesign()
-        design = JRXmlLoader.load(file)
-        file.delete()
-        return design
-        
-    def _compile_design(self, designobject):
-        """Compile the report design if needed."""
-        compiled = JasperCompileManager.compileReport(designobject)
-        return compiled
+            if not design_name in self.compiled_design:
+                self.compiled_design[design_name] = compile_jrxml(self.tempdir, designdatalist[design_name])
     
-    def generate(self, dict_data):
+    def generate(self, dict_data, outputformat = 'PDF'):
         """Generate Output with JasperReports."""
 
         # convert to a java.util.Map so it can be passed as parameters
@@ -117,17 +121,66 @@ class JasperInterface:
         map.put('XML_DATE_PATTERN', 'yyyy-MM-dd')
         map.put('XML_NUMBER_PATTERN', '#,##0.##')
         map.put('net.sf.jasperreports.xpath.executer.factory', 'net.sf.jasperreports.engine.util.xml.JaxenXPathExecuterFactory')
+        jasper_print = JasperFillManager.fillReport(self.compiled_design['main'], map)
+        xml_file.delete()
 
         
-        # generate report to file
-        jasper_print = JasperFillManager.fillReport(self.compiled_design['main'], map)
-        tmp_filename = os.path.join(self.tempdir, gen_uuid() + '.pdf')
-        JasperExportManager.exportReportToPdfFile(jasper_print, tmp_filename)
-        xml_file.delete()
+        # generate report to file according to format
+        output_filename = os.path.join(self.tempdir, gen_uuid() + '.tmp')
         
-        # export pdf stream and delete temporary file
-        output = open(tmp_filename).read()
-        os.remove(tmp_filename)
+        if outputformat == 'PDF':
+            self._generate_pdf(jasper_print, output_filename)
+        elif outputformat == 'RTF':
+            self._generate_rtf(jasper_print, output_filename)
+        elif outputformat == 'CSV':
+            self._generate_csv(jasper_print, output_filename)
+        elif outputformat == 'TEXT':
+            self._generate_text(jasper_print, output_filename)
+        elif outputformat == 'HTML':
+            self._generate_html(jasper_print, output_filename)
+        elif outputformat == 'XML':
+            self._generate_xml(jasper_print, output_filename)
+        else:
+            raise RuntimeError("Unknown output type %r" % (outputformat))
+        
+        # export file stream and delete temporary file
+        output = open(output_filename).read()
+        os.remove(output_filename)
         
         return output
-        
+    
+    def _generate_xml(self, jasper_print, output_filename):
+        JasperExportManager.exportReportToXmlFile(jasper_print, output_filename)
+    
+    def _generate_pdf(self, jasper_print, output_filename):
+        JasperExportManager.exportReportToPdfFile(jasper_print, output_filename)
+
+    def _generate_rtf(self, jasper_print, output_filename):
+        """Generate RTF output."""
+        rtf_exporter = JRRtfExporter()
+        rtf_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
+        rtf_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
+        rtf_exporter.exportReport()
+
+    def _generate_csv(self, jasper_print, output_filename):
+        """Generate CSV output."""
+        csv_exporter = JRCsvExporter()
+        csv_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
+        csv_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
+        csv_exporter.exportReport()
+
+    def _generate_text(self, jasper_print, output_filename):
+        """Generate Text output."""
+        text_exporter = JRTextExporter()
+        text_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
+        text_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
+        text_exporter.setParameter(JRTextExporterParameter.PAGE_WIDTH, 80)
+        text_exporter.setParameter(JRTextExporterParameter.PAGE_HEIGHT, 60)
+        text_exporter.exportReport()
+
+    def _generate_html(self, jasper_print, output_filename):
+        """Generate HTML output."""
+        html_exporter = JRHtmlExporter()
+        html_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
+        html_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
+        html_exporter.exportReport()        

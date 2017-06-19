@@ -12,13 +12,14 @@ from jnius import autoclass
 JRXML_FILE = 'CustomersReportSingle.jrxml'
 JSON_FILE = 'northwind.json'
 PDF_FILE  = 'CustomersReportSingle.pdf'
+HTML_FILE = 'CustomersReportSingle.html'
 TMP_DIRECTORY = '/var/jaspertemp'
 
 if __name__ == '__main__':
     files = {}
     files['main'] = open(JRXML_FILE).read()
     
-    jasper = JasperInterface(files, TMP_DIRECTORY)
+    jasper = JasperInterface(files, {}, TMP_DIRECTORY)
     
     json_dict = json.load(open(JSON_FILE))
     
@@ -26,5 +27,11 @@ if __name__ == '__main__':
         os.remove(PDF_FILE)
     except:
         pass
+
+    try:
+        os.remove(HTML_FILE)
+    except:
+        pass
     
-    open(PDF_FILE, 'wb').write(jasper.generate(json_dict))
+    open(PDF_FILE, 'wb').write(jasper.generate(json_dict, 'PDF'))
+    open(HTML_FILE, 'wb').write(jasper.generate(json_dict, 'HTML'))  

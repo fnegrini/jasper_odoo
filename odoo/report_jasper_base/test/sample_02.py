@@ -20,7 +20,7 @@ if __name__ == '__main__':
     files['main'] = open(JRXML_MAIN_FILE).read()
     files[JASPER_SUB_FILE] = open(JRXML_SUB_FILE).read()
     
-    jasper = JasperInterface(files, TMP_DIRECTORY)
+    jasper = JasperInterface(files, {}, TMP_DIRECTORY)
     
     json_dict = json.load(open(JSON_FILE))
     
