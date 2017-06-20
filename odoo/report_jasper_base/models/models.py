@@ -2,14 +2,16 @@
 
 from odoo import models, fields, api
 
-# class report_jasper_base(models.Model):
-#     _name = 'report_jasper_base.report_jasper_base'
+class jasper_report(models.Model):
+    _inherit = 'ir.actions.report.xml'
 
-#     name = fields.Char()
-#     value = fields.Integer()
-#     value2 = fields.Float(compute="_value_pc", store=True)
-#     description = fields.Text()
-#
-#     @api.depends('value')
-#     def _value_pc(self):
-#         self.value2 = float(self.value) / 100
+    report_type = fields.Selection(selection_add=[('jasper','Jasper Report')])
+    jasper_output_type = fields.Selection([("PDF", " PDF"),\
+                                           ("HTML", "HTML"),\
+                                           ("CSV", "CSV"),\
+                                           ("RTF", "RTF"),\
+                                           ("TEXT", "Plain text"),\
+                                           ("XML", "XML")],\
+                                            string = 'Output format')
+    jasper_jrxml_file = fields.Binary(string='Design file', filters='*.jrxml')
+    jasper_jasper_file = fields.Binary(string='Compiled file', filters='*.jasper')
