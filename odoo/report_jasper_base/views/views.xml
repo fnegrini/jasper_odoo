@@ -11,14 +11,51 @@
             <xpath expr="//page[@name='security']" position="before">
                 <page string="Jasper Report" name="jasper_tab"
                     attrs="{'invisible': [('report_type', '!=', 'jasper')]}">
-                    <group name="jasper_params">
-        				<field name="jasper_output_type"/>
-        				<field name="jasper_jrxml_file"/>
-        				<field name="jasper_jasper_file"/>
-                    </group>
+                    <notebook name="jasper_notebook">
+                    	<page string="Main Report" name="jasper_main_page">
+		                    <group name="jasper_params">
+		        				<field name="jasper_output_type"/>
+		        				<field name="jasper_jrxml_file"/>
+		        				<field name="jasper_jasper_file"/>
+		                    </group>
+	                    </page>
+                    	<page string="Subreports" name="jasper_subrep_page">
+		                    <group name="jasper_subrep_group">
+		        				<field name="sub_reports" widget="one2many_list" nolabel="1"/>
+		                    </group>
+	                    </page>
+	                    
+                    </notebook>
                 </page>
 			</xpath>
         </field>
 	</record>
+	
+    <record model="ir.ui.view" id="jasper_sub_report_treeview">
+        <field name="name">jasper.sub.report.treeview</field>
+        <field name="model">jasper.sub.report</field>
+        <field name="arch" type="xml">
+            <tree string="Subreport">
+                <field name="param_name"/>
+                <field name="jasper_jrxml_file"/>
+                <field name="jasper_jasper_file"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="jasper_sub_report_view">
+        <field name="name">jasper.sub.report.view</field>
+        <field name="model">jasper.sub.report</field>
+        <field name="arch" type="xml">
+            <form string="Subreport">
+                <group>
+                    <field name="param_name"/>
+	                <field name="jasper_jrxml_file"/>
+	                <field name="jasper_jasper_file"/>
+                </group>
+            </form>
+        </field>
+    </record>
+        	
   </data>
 </odoo>
