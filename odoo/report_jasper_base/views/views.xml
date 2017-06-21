@@ -27,6 +27,9 @@
 	                    
                     </notebook>
                 </page>
+                <footer>
+        	        <button name="get_xml_sample" type="object" string="Get XML" class="oe_read_only"/>
+		        </footer>
 			</xpath>
         </field>
 	</record>

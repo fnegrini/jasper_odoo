@@ -21,6 +21,8 @@ class jasper_report(models.Model):
     
     sub_reports = fields.One2many('jasper.sub.report', 'report', string="Subreports") 
 
+    def get_xml_sample(self):
+        pass
 
 class jasper_sub_report(models.Model):
     _name = 'jasper.sub.report'
