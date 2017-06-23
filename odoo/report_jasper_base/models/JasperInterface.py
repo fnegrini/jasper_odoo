@@ -74,7 +74,12 @@ def compile_jrxml(tempdir, designdata):
     file.delete()
     compiled = JasperCompileManager.compileReport(design)
     return compiled
-    
+
+def dictionary_to_xml(dict_data):
+    xml_string = dicttoxml(dict_data, root=False, custom_root=False, attr_type=False)
+    xml = parseString(xml_string)
+    return xml.toprettyxml()
+
     
 class JasperInterface:
     """This is the new style pyJasper Interface"""
@@ -111,9 +116,8 @@ class JasperInterface:
             map.put(i, self.compiled_design[i])
         
         # create datasource
-        xml_string = dicttoxml(dict_data, root=False, custom_root=False, attr_type=False)
-        xml = parseString(xml_string)
-        xml_file = stream_to_java_file(self.tempdir, xml.toprettyxml())
+        xml_stream = dictionary_to_xml(dict_data)
+        xml_file = stream_to_java_file(self.tempdir, xml_stream)
         xml_document = JRXmlUtils.parse(xml_file);
         
         # passing base parameters

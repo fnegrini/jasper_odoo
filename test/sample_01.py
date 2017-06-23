@@ -4,7 +4,7 @@ import os
 import sys
 import json
 
-sys.path.insert(0, '../odoo/report_jasper_base/base')
+sys.path.insert(0, '../odoo/report_jasper_base/models')
 from JasperInterface import JasperInterface
 
 from jnius import autoclass
