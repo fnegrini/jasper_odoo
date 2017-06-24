@@ -26,6 +26,11 @@
 		        				<field name="sub_reports" widget="one2many_list" nolabel="1"/>
 		                    </group>
 	                    </page>
+                    	<page string="Model Fields" name="jasper_model_fields_page">
+		                    <group name="jasper_model_fields_group">
+		        				<field name="model_fields" widget="one2many_list" nolabel="1"/>
+		                    </group>
+	                    </page>
 	                    
                     </notebook>
                 </page>
@@ -58,6 +63,56 @@
             </form>
         </field>
     </record>
-        	
+
+    <record model="ir.ui.view" id="jasper_model_field_treeview">
+        <field name="name">jasper.model.field.treeview</field>
+        <field name="model">jasper.model.field</field>
+        <field name="arch" type="xml">
+            <tree string="Field">
+                <field name="field" domain="[('model', '=', parent.model)]"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="jasper_model_field_view">
+        <field name="name">jasper.model.field.view</field>
+        <field name="model">jasper.model.field</field>
+        <field name="arch" type="xml">
+            <form string="Field">
+                <group>
+                    <field name="field" domain="[('model', '=', parent.model)]"/>
+                </group>
+                <group>
+                    <field name="related_fields" widget="one2many_list" />
+                </group>
+                
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="jasper_sub_model_field_treeview">
+        <field name="name">jasper.sub.model.field.treeview</field>
+        <field name="model">jasper.sub.model.field</field>
+        <field name="arch" type="xml">
+            <tree string="SubModel Field">
+            	<field name="model" invisible="1"/>
+                <field name="sub_model_field" domain="[('model', '=', model)]"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="jasper_sub_model_field_view">
+        <field name="name">jasper.sub.model.field.view</field>
+        <field name="model">jasper.sub.model.field</field>
+        <field name="arch" type="xml">
+            <form string="SubModel Field">
+                <group>
+                	<field name="model" invisible="1"/>
+                    <field name="sub_model_field" domain="[('model', '=', model)]"/>
+                </group>
+            </form>
+        </field>
+    </record>
+       	
   </data>
 </odoo>

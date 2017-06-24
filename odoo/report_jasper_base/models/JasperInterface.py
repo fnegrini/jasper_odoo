@@ -79,7 +79,7 @@ def compile_jrxml(tempdir, designdata):
     return compiled
 
 def dictionary_to_xml(dict_data):
-    xml_string = dicttoxml(dict_data, root=False, custom_root=False, attr_type=False)
+    xml_string = dicttoxml(dict_data, root=True, custom_root=False, attr_type=False)
     xml = parseString(xml_string)
     return xml.toprettyxml()
 
