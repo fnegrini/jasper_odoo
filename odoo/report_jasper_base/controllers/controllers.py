@@ -1,20 +1,25 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from openerp import http
+from openerp.http import request
+from openerp.addons.web.controllers.main import serialize_exception,content_disposition
+import base64
+import os
 
-# class ReportJasperBase(http.Controller):
-#     @http.route('/report_jasper_base/report_jasper_base/', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
-
-#     @http.route('/report_jasper_base/report_jasper_base/objects/', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('report_jasper_base.listing', {
-#             'root': '/report_jasper_base/report_jasper_base',
-#             'objects': http.request.env['report_jasper_base.report_jasper_base'].search([]),
-#         })
-
-#     @http.route('/report_jasper_base/report_jasper_base/objects/<model("report_jasper_base.report_jasper_base"):obj>/', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('report_jasper_base.object', {
-#             'object': obj
-#         })
+class Binary(http.Controller):
+    
+ @http.route('/web/binary/download_document', type='http', auth="public")
+ @serialize_exception
+ def download_document(self, path, filename='file.txt', **kw):
+     """ Download link for files stored as binary fields.
+     :param str path: full path to binary file
+     :param str filename: output file name
+     :returns: :class:`werkzeug.wrappers.Response`
+     """
+     if not os.path.isfile(path):
+         return request.not_found()
+     else:
+         file_bin = open(path,'rb').read()
+         filecontent = base64.b64decode(file_bin)
+         return request.make_response(file_bin,
+                            [('Content-Type', 'application/octet-stream'),
+                             ('Content-Disposition', content_disposition(filename))])

@@ -1,0 +1,8 @@
+<odoo>
+  <data>
+		<record id="jasper_tmp_directory" model="ir.config_parameter">
+			<field name="key">jasper.temp.directory</field>
+			<field name="value">/var/jaspertemp</field>
+</record>  
+  </data>
+</odoo>

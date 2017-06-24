@@ -55,10 +55,13 @@ def ensure_dirs(dirlist):
 def gen_uuid():
     """Generates an hopfully unique ID."""
     return md5.new("%s-%f" % (time.time(), random.random())).hexdigest()
+
+def temp_file_name(tempdir):
+    #ensure_dirs([tempdir])
+    return os.path.join(tempdir, gen_uuid() + '.TMP')
     
 def stream_to_java_file(tempdir, stream):
-    ensure_dirs([tempdir])
-    tmp_filename = os.path.join(tempdir, gen_uuid() + '.tmp')
+    tmp_filename = temp_file_name(tempdir)
     codecs.open(tmp_filename, 'wb', 'utf-8').write(stream)
     file = File(tmp_filename)
     return file
@@ -130,7 +133,7 @@ class JasperInterface:
 
         
         # generate report to file according to format
-        output_filename = os.path.join(self.tempdir, gen_uuid() + '.tmp')
+        output_filename = temp_file_name(self.tempdir)
         
         if outputformat == 'PDF':
             self._generate_pdf(jasper_print, output_filename)

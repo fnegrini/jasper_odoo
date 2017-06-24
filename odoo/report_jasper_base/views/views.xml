@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
         	<field name="model" position="after">
         		<group name="jasper_getxml" attrs="{'invisible': [('report_type', '!=', 'jasper')]}">
-	      	        <button name="get_xml_sample" type="object" string="Get XML"/>
+	      	        <button name="get_xml_sample" type="object" string="Get XML sample file"/>
       	        </group>
         	</field>
             <xpath expr="//page[@name='security']" position="before">
