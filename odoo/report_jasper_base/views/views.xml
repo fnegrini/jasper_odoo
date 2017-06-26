@@ -70,6 +70,7 @@
         <field name="arch" type="xml">
             <tree string="Field">
                 <field name="field" domain="[('model', '=', parent.model)]"/>
+                <field name="model" invisible="0"/>
             </tree>
         </field>
     </record>
@@ -81,6 +82,7 @@
             <form string="Field">
                 <group>
                     <field name="field" domain="[('model', '=', parent.model)]"/>
+                    <field name="model" invisible="0"/>
                 </group>
                 <group>
                     <field name="related_fields" widget="one2many_list" />
@@ -95,8 +97,7 @@
         <field name="model">jasper.sub.model.field</field>
         <field name="arch" type="xml">
             <tree string="SubModel Field">
-            	<field name="model" invisible="1"/>
-                <field name="sub_model_field" domain="[('model', '=', model)]"/>
+                <field name="sub_model_field" domain="[('model', '=', parent.model)]"/>
             </tree>
         </field>
     </record>
@@ -107,8 +108,7 @@
         <field name="arch" type="xml">
             <form string="SubModel Field">
                 <group>
-                	<field name="model" invisible="1"/>
-                    <field name="sub_model_field" domain="[('model', '=', model)]"/>
+                    <field name="sub_model_field" domain="[('model', '=', parent.model)]"/>
                 </group>
             </form>
         </field>
