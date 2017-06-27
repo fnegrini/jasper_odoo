@@ -34,4 +34,3 @@ if __name__ == '__main__':
         pass
     
     open(PDF_FILE, 'wb').write(jasper.generate(json_dict, 'PDF'))
-    open(HTML_FILE, 'wb').write(jasper.generate(json_dict, 'HTML'))  

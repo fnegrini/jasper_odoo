@@ -12,31 +12,20 @@ from jnius import autoclass
 from dicttoxml import dicttoxml
 from xml.dom.minidom import parseString
 
-# Java DataTypes
-JMap       = autoclass('java.util.HashMap')
-JArrayList = autoclass('java.util.ArrayList')
-JInt       = autoclass('java.lang.Integer')
-JLong      = autoclass('java.lang.Long')
-JFloat     = autoclass('java.lang.Float')
-JDouble    = autoclass('java.lang.Double')
-JString    = autoclass('java.lang.String')
-
-
 # Java base classes
+JMap       = autoclass('java.util.HashMap')
 File = autoclass('java.io.File')
-ByteArrayInputStream = autoclass('java.io.ByteArrayInputStream')
+
 
 #JasperReport Classes
 JRExporterParameter = autoclass('net.sf.jasperreports.engine.JRExporterParameter')
 JasperExportManager = autoclass('net.sf.jasperreports.engine.JasperExportManager')
 JasperFillManager = autoclass('net.sf.jasperreports.engine.JasperFillManager')
-JRXmlDataSource = autoclass('net.sf.jasperreports.engine.data.JRXmlDataSource')
-
+#JRXmlDataSource = autoclass('net.sf.jasperreports.engine.data.JRXmlDataSource')
 JasperCompileManager = autoclass('net.sf.jasperreports.engine.JasperCompileManager')
 JasperDesign = autoclass('net.sf.jasperreports.engine.design.JasperDesign')
 JRXmlLoader = autoclass('net.sf.jasperreports.engine.xml.JRXmlLoader')
 JRXmlUtils  = autoclass('net.sf.jasperreports.engine.util.JRXmlUtils')
-
 JRCsvExporter = autoclass('net.sf.jasperreports.engine.export.JRCsvExporter')
 JRRtfExporter = autoclass('net.sf.jasperreports.engine.export.JRRtfExporter')
 JRHtmlExporter = autoclass('net.sf.jasperreports.engine.export.JRHtmlExporter')
@@ -44,6 +33,7 @@ JRTextExporter = autoclass('net.sf.jasperreports.engine.export.JRTextExporter')
 JRTextExporterParameter = autoclass('net.sf.jasperreports.engine.export.JRTextExporterParameter')
 
 TMPDIR = '/tmp/pyJasper'
+
 
 def ensure_dirs(dirlist):
     """Ensure that a dir and all it's parents exist."""
@@ -66,9 +56,6 @@ def stream_to_java_file(tempdir, stream):
     file = File(tmp_filename)
     return file
     
-def stream_to_java_stream(stream):
-    return ByteArrayInputStream(stream)   
-
 def compile_jrxml(tempdir, designdata):
     xml = parseString(designdata)
     file = stream_to_java_file(tempdir, xml.toprettyxml())
@@ -79,13 +66,13 @@ def compile_jrxml(tempdir, designdata):
     return compiled
 
 def dictionary_to_xml(dict_data):
-    xml_string = dicttoxml(dict_data, root=True, custom_root=False, attr_type=False)
+    xml_string = dicttoxml(dict_data, root=True, custom_root='odoo', attr_type=False)
     xml = parseString(xml_string)
     return xml.toprettyxml()
 
     
 class JasperInterface:
-    """This is the new style pyJasper Interface"""
+    """Jasper interface to Odoo models"""
     
     def __init__(self, designdatalist, compiled_design = {}, tempdir = TMPDIR):
         """Constructor
@@ -97,14 +84,8 @@ class JasperInterface:
         
         self.tempdir = tempdir
 
-        if isinstance(designdatalist, basestring):
-            #warnings.warn("Passing the JRXML data as a string is deprecated. Use a dict of JRXML strings with template_var_name as key.", DeprecationWarning)
-            # fix it anyway
-            designdatalist = {'main': designdatalist}
-
         # Compile design if compiled version doesn't exist
         self.compiled_design = compiled_design
-        self.design_object = {}
         
         for design_name in designdatalist:
             if not design_name in self.compiled_design:
@@ -163,21 +144,18 @@ class JasperInterface:
         JasperExportManager.exportReportToPdfFile(jasper_print, output_filename)
 
     def _generate_rtf(self, jasper_print, output_filename):
-        """Generate RTF output."""
         rtf_exporter = JRRtfExporter()
         rtf_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
         rtf_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
         rtf_exporter.exportReport()
 
     def _generate_csv(self, jasper_print, output_filename):
-        """Generate CSV output."""
         csv_exporter = JRCsvExporter()
         csv_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
         csv_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
         csv_exporter.exportReport()
 
     def _generate_text(self, jasper_print, output_filename):
-        """Generate Text output."""
         text_exporter = JRTextExporter()
         text_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
         text_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)
@@ -186,7 +164,6 @@ class JasperInterface:
         text_exporter.exportReport()
 
     def _generate_html(self, jasper_print, output_filename):
-        """Generate HTML output."""
         html_exporter = JRHtmlExporter()
         html_exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasper_print)
         html_exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, output_filename)

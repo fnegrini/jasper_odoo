@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from JasperInterface import dictionary_to_xml, temp_file_name
+from JasperInterface import JasperInterface, dictionary_to_xml, temp_file_name
+from dbus.proxies import Interface
+from base64 import encodestring, decodestring
+
+JASPER_DATA = 'jasper_data'
 
 class jasper_report(models.Model):
     _inherit = 'ir.actions.report.xml'
@@ -28,12 +32,6 @@ class jasper_report(models.Model):
         temp_dir = self.env['ir.config_parameter'].get_param('jasper.temp.directory') or '/var/jaspertemp'
         return temp_dir
 
-    def expand_model_fields(self):
-        #"many2one" - Expand as subfields separated by dosts
-        #"many2many" - Expand as dataset force relation field
-        #"one2many" - Expand as dataset use relation field in design
-        pass
-    
     @api.multi
     def get_model_fields(self):
         self.ensure_one()
@@ -84,13 +82,9 @@ class jasper_report(models.Model):
         
         # load 10 first records
         ids = model_class.search([], limit=10)
-        jasper_data = {}
-        jasper_data[self.model] = []
-        map_fields = self.get_model_fields()
-        
-        #generate dictionary for each record 
-        for id in ids:
-            self.generate_data_for_record(jasper_data, id, map_fields)
+
+        # convert do dictionary data
+        jasper_data = self.generate_model_data(ids)       
         
         #Generate temp xml file
         xml_stream = dictionary_to_xml(jasper_data)
@@ -105,7 +99,44 @@ class jasper_report(models.Model):
              'url': '/web/binary/download_document?path=%s&filename=%s.xml'%(xml_file, self.model),
              'target': 'self',
              }
-
+    
+    def generate_model_data(self, res_ids):
+        model_class = self.env[self.model]
+        result = {}
+        result[self.model] = []
+        map_fields = self.get_model_fields()
+        for id in res_ids:
+            self.generate_data_for_record(result, id, map_fields)
+        
+        return result
+            
+    @api.model
+    def render_report(self, res_ids, name, data):
+        uid = self.env.context['params']['action']
+        report = self.browse(uid)
+        
+        # if data['jasper_data'] does not generate data from model
+        if JASPER_DATA in data:
+            jasper_data = data[JASPER_DATA]
+        else:
+            model_ids = self.env[report.model].browse(res_ids)
+            jasper_data = report.generate_model_data(model_ids)
+        
+        
+        designs = {}
+        compileds = {}
+        # Fill binary reports
+        designs['main'] = decodestring(report.jasper_jrxml_file)
+        compileds['main'] = decodestring(report.jasper_jasper_file)
+        
+        # call Jasper Interface
+        interface = JasperInterface(designs, compileds, self.get_temp_dir())
+        
+        report = interface.generate(jasper_data, report.jasper_output_type)
+        
+        # return output file and extension
+        return (report, report.jasper_output_type)
+    
 class jasper_sub_report(models.Model):
     _name = 'jasper.sub.report'
     
