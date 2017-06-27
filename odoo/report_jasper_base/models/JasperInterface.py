@@ -52,7 +52,10 @@ def temp_file_name(tempdir):
     
 def stream_to_java_file(tempdir, stream):
     tmp_filename = temp_file_name(tempdir)
-    codecs.open(tmp_filename, 'wb', 'utf-8').write(stream)
+    pfile = codecs.open(tmp_filename, 'wb', 'utf-8')
+    #pfile = open(tmp_filename, 'wb')
+    pfile.write(stream)
+    pfile.close()
     file = File(tmp_filename)
     return file
     

@@ -70,9 +70,19 @@ class jasper_report(models.Model):
                     field_name = m2o_fld['field'] + '.' + m2o_field
                     record[field_name] = m2o_fields[m2o_field]
                     
-        #one2many subrecords TODO!
+        #one2many subrecords
+        for o2m_fld in map_fields['one2many']:
+            results_o2m = id[o2m_fld['field']].read(o2m_fld['sub_fields'])
+            for result_o2m in results_o2m:
+                result_o2m[self.model] = id.id
+                jasper_data[o2m_fld['field']].append(result_o2m)
         
-        #many2many subrecords TODO!
+        #many2many subrecords
+        for m2m_fld in map_fields['many2many']:
+            results_m2m = id[m2m_fld['field']].read(m2m_fld['sub_fields'])
+            for result_m2m in results_m2m:
+                result_m2m[self.model] = id.id
+                jasper_data[m2m_fld['field']].append(result_m2m)
         
         jasper_data[self.model].append(record)
         
@@ -102,40 +112,65 @@ class jasper_report(models.Model):
     
     def generate_model_data(self, res_ids):
         model_class = self.env[self.model]
+        map_fields = self.get_model_fields()
+
+        #initialize resultsets
         result = {}
         result[self.model] = []
-        map_fields = self.get_model_fields()
+        
+        for o2m_fld in map_fields['one2many']:
+            result[o2m_fld['field']] = []
+       
+        for m2m_fld in map_fields['many2many']:
+            result[m2m_fld['field']] = []
+        
         for id in res_ids:
             self.generate_data_for_record(result, id, map_fields)
         
         return result
-            
-    @api.model
-    def render_report(self, res_ids, name, data):
-        uid = self.env.context['params']['action']
-        report = self.browse(uid)
+    
+    @api.multi
+    def generate_report(self, res_ids, name, data):
+        self.ensure_one()
         
         # if data['jasper_data'] does not generate data from model
         if JASPER_DATA in data:
             jasper_data = data[JASPER_DATA]
         else:
-            model_ids = self.env[report.model].browse(res_ids)
-            jasper_data = report.generate_model_data(model_ids)
+            model_ids = self.env[self.model].browse(res_ids)
+            jasper_data = self.generate_model_data(model_ids)
         
         
         designs = {}
         compileds = {}
         # Fill binary reports
-        designs['main'] = decodestring(report.jasper_jrxml_file)
-        compileds['main'] = decodestring(report.jasper_jasper_file)
+        if self.jasper_jasper_file:
+            designs['main'] = decodestring(self.jasper_jrxml_file)
+        
+        if self.jasper_jasper_file:
+            compileds['main'] = decodestring(self.jasper_jasper_file)
+        
+        # Fill binary subreports    
+        for subreport in self.sub_reports:
+            if subreport.jasper_jrxml_file:
+                designs[subreport.param_name] = decodestring(subreport.jasper_jrxml_file)
+            if subreport.jasper_jasper_file:
+                compileds[subreport.param_name] = decodestring(subreport.jasper_jasper_file) 
         
         # call Jasper Interface
         interface = JasperInterface(designs, compileds, self.get_temp_dir())
         
-        report = interface.generate(jasper_data, report.jasper_output_type)
+        report = interface.generate(jasper_data, self.jasper_output_type)
         
         # return output file and extension
-        return (report, report.jasper_output_type)
+        return (report, self.jasper_output_type)
+            
+    @api.model
+    def render_report(self, res_ids, name, data):
+        uid = self.env.context['params']['action']
+        report = self.browse(uid)
+        return report.generate_report(res_ids, name, data)
+        
     
 class jasper_sub_report(models.Model):
     _name = 'jasper.sub.report'

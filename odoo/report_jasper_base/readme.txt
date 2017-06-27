@@ -8,6 +8,8 @@ For ubuntu distributions, PyJNIus library can be easy instaled through PIP insta
 #sudo pip install pyjnius
 #sudo pip install dicttoxml
 
+#sudo apt-get install cython
+
 2. Environment variables
 PyJNIus uses JNI interface, because of that you should set some environent variables: JAVA_HOME and CLASSPATH.
 In ubuntu distributions, you can set it on /etc/environment file. Use your default editor and include the following lines (sudo access required)
