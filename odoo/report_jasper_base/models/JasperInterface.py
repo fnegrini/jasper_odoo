@@ -15,7 +15,11 @@ from xml.dom.minidom import parseString
 # Java base classes
 JMap       = autoclass('java.util.HashMap')
 File = autoclass('java.io.File')
-
+StringReader = autoclass('java.io.StringReader')
+String = autoclass('java.lang.String')
+StringBufferInputStream = autoclass('java.io.StringBufferInputStream')
+ByteArrayInputStream = autoclass('java.io.ByteArrayInputStream')
+InputSource = autoclass('org.xml.sax.InputSource')
 
 #JasperReport Classes
 JRExporterParameter = autoclass('net.sf.jasperreports.engine.JRExporterParameter')
@@ -104,8 +108,10 @@ class JasperInterface:
         
         # create datasource
         xml_stream = dictionary_to_xml(dict_data)
-        xml_file = stream_to_java_file(self.tempdir, xml_stream)
-        xml_document = JRXmlUtils.parse(xml_file);
+        xml_string = String(xml_stream)
+        byte_array = ByteArrayInputStream(xml_string.getBytes("UTF-8"))
+        java_source = InputSource(byte_array)
+        xml_document = JRXmlUtils.parse(java_source);
         
         # passing base parameters
         map.put('XML_DATA_DOCUMENT', xml_document)
