@@ -50,12 +50,12 @@ def gen_uuid():
     """Generates an hopfully unique ID."""
     return md5.new("%s-%f" % (time.time(), random.random())).hexdigest()
 
-def temp_file_name(tempdir):
+def temp_file_name(tempdir, extention):
     #ensure_dirs([tempdir])
-    return os.path.join(tempdir, gen_uuid() + '.TMP')
+    return os.path.join(tempdir, gen_uuid() + '.' + extention)
     
-def stream_to_java_file(tempdir, stream):
-    tmp_filename = temp_file_name(tempdir)
+def stream_to_java_file(tempdir, stream, extention = 'TMP'):
+    tmp_filename = temp_file_name(tempdir, extention)
     pfile = codecs.open(tmp_filename, 'wb', 'utf-8')
     #pfile = open(tmp_filename, 'wb')
     pfile.write(stream)
@@ -65,7 +65,7 @@ def stream_to_java_file(tempdir, stream):
     
 def compile_jrxml(tempdir, designdata):
     xml = parseString(designdata)
-    file = stream_to_java_file(tempdir, xml.toprettyxml())
+    file = stream_to_java_file(tempdir, xml.toprettyxml(), 'xml')
     design = JasperDesign()
     design = JRXmlLoader.load(file)
     file.delete()
@@ -108,10 +108,23 @@ class JasperInterface:
         
         # create datasource
         xml_stream = dictionary_to_xml(dict_data)
-        xml_string = String(xml_stream)
-        byte_array = ByteArrayInputStream(xml_string.getBytes("UTF-8"))
-        java_source = InputSource(byte_array)
-        xml_document = JRXmlUtils.parse(java_source);
+        
+        """ File """
+        #java_file = stream_to_java_file(self.tempdir, xml_stream, 'xml')
+        #xml_document = JRXmlUtils.parse(java_file)
+        
+        
+        """ Byte Array + InputSource """
+        #xml_string = String(xml_stream)
+        #byte_array = ByteArrayInputStream(xml_string.getBytes("UTF-8"))
+        #input_source = InputSource(byte_array)
+        #xml_document = JRXmlUtils.parse(input_source)
+        
+        """ File + Input Source """
+        java_file = stream_to_java_file(self.tempdir, xml_stream, 'xml')
+        input_source = InputSource(java_file)
+        xml_document = JRXmlUtils.parse(input_source)
+
         
         # passing base parameters
         map.put('XML_DATA_DOCUMENT', xml_document)
@@ -119,7 +132,7 @@ class JasperInterface:
         map.put('XML_NUMBER_PATTERN', '#,##0.##')
         map.put('net.sf.jasperreports.xpath.executer.factory', 'net.sf.jasperreports.engine.util.xml.JaxenXPathExecuterFactory')
         jasper_print = JasperFillManager.fillReport(self.compiled_design['main'], map)
-        xml_file.delete()
+        java_file.delete()
 
         
         # generate report to file according to format
