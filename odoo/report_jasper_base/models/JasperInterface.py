@@ -56,20 +56,25 @@ def temp_file_name(tempdir, extention):
     
 def stream_to_java_file(tempdir, stream, extention = 'TMP'):
     tmp_filename = temp_file_name(tempdir, extention)
-    pfile = codecs.open(tmp_filename, 'wb', 'utf-8')
-    #pfile = open(tmp_filename, 'wb')
+    #pfile = codecs.open(tmp_filename, 'wb', 'utf-8')
+    pfile = open(tmp_filename, 'wb')
     pfile.write(stream)
     pfile.close()
     file = File(tmp_filename)
     return file
+
+def stream_to_java_stream(stream):
+    str = String(stream);
+    byte_array = ByteArrayInputStream(str.getBytes())
+    return byte_array
     
 def compile_jrxml(tempdir, designdata):
     xml = parseString(designdata)
     file = stream_to_java_file(tempdir, xml.toprettyxml(), 'xml')
     design = JasperDesign()
     design = JRXmlLoader.load(file)
-    file.delete()
     compiled = JasperCompileManager.compileReport(design)
+    file.delete()
     return compiled
 
 def dictionary_to_xml(dict_data):
@@ -77,11 +82,10 @@ def dictionary_to_xml(dict_data):
     xml = parseString(xml_string)
     return xml.toprettyxml()
 
-    
 class JasperInterface:
     """Jasper interface to Odoo models"""
     
-    def __init__(self, designdatalist, compiled_design = {}, tempdir = TMPDIR):
+    def __init__(self, jrxml_list, jasper_list = {}, tempdir = TMPDIR):
         """Constructor
         designdatalist: a dict {"template_var_name": "JRXML data content"}.
         compiled_design: a dict {"template_var_name: "JASPER data content"}.
@@ -92,11 +96,15 @@ class JasperInterface:
         self.tempdir = tempdir
 
         # Compile design if compiled version doesn't exist
-        self.compiled_design = compiled_design
+        self.compiled_design = {}
         
-        for design_name in designdatalist:
-            if not design_name in self.compiled_design:
-                self.compiled_design[design_name] = compile_jrxml(self.tempdir, designdatalist[design_name])
+        for design_name in jrxml_list:
+            if design_name in jasper_list:
+                file = stream_to_java_file(self.tempdir, jasper_list[design_name], 'jasper')
+                self.compiled_design[design_name] = JRXmlLoader.load(file)
+                #file.delete()
+            else:
+                self.compiled_design[design_name] = compile_jrxml(self.tempdir, jrxml_list[design_name])
     
     def generate(self, dict_data, outputformat = 'PDF'):
         """Generate Output with JasperReports."""
@@ -108,23 +116,8 @@ class JasperInterface:
         
         # create datasource
         xml_stream = dictionary_to_xml(dict_data)
-        
-        """ File """
-        #java_file = stream_to_java_file(self.tempdir, xml_stream, 'xml')
-        #xml_document = JRXmlUtils.parse(java_file)
-        
-        
-        """ Byte Array + InputSource """
-        #xml_string = String(xml_stream)
-        #byte_array = ByteArrayInputStream(xml_string.getBytes("UTF-8"))
-        #input_source = InputSource(byte_array)
-        #xml_document = JRXmlUtils.parse(input_source)
-        
-        """ File + Input Source """
-        java_file = stream_to_java_file(self.tempdir, xml_stream, 'xml')
-        input_source = InputSource(java_file)
-        xml_document = JRXmlUtils.parse(input_source)
-
+        file = stream_to_java_file(self.tempdir, xml_stream, 'xml')
+        xml_document = JRXmlUtils.parse(file)
         
         # passing base parameters
         map.put('XML_DATA_DOCUMENT', xml_document)
@@ -132,9 +125,7 @@ class JasperInterface:
         map.put('XML_NUMBER_PATTERN', '#,##0.##')
         map.put('net.sf.jasperreports.xpath.executer.factory', 'net.sf.jasperreports.engine.util.xml.JaxenXPathExecuterFactory')
         jasper_print = JasperFillManager.fillReport(self.compiled_design['main'], map)
-        java_file.delete()
-
-        
+        file.delete()
         # generate report to file according to format
         output_filename = temp_file_name(self.tempdir)
         

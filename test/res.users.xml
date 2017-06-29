@@ -1,0 +1,133 @@
+<?xml version="1.0" ?>
+<odoo>
+	<res.users>
+		<item>
+			<city>Scranton</city>
+			<partner_id.display_name>YourCompany, Administrator</partner_id.display_name>
+			<display_name>Administrator</display_name>
+			<name>Administrator</name>
+			<partner_id.id>3</partner_id.id>
+			<id>1</id>
+			<partner_id.name>Administrator</partner_id.name>
+			<email>admin@yourcompany.example.com</email>
+		</item>
+		<item>
+			<city>Namur (Loyers)</city>
+			<partner_id.display_name>YourCompany, Demo User</partner_id.display_name>
+			<display_name>Demo User</display_name>
+			<name>Demo User</name>
+			<partner_id.id>6</partner_id.id>
+			<id>5</id>
+			<partner_id.name>Demo User</partner_id.name>
+			<email>demo@yourcompany.example.com</email>
+		</item>
+		<item>
+			<city>False</city>
+			<partner_id.display_name>dummy</partner_id.display_name>
+			<display_name>dummy</display_name>
+			<name>dummy</name>
+			<partner_id.id>43</partner_id.id>
+			<id>6</id>
+			<partner_id.name>dummy</partner_id.name>
+			<email>dummy@yourcompany.com</email>
+		</item>
+	</res.users>
+	<log_ids>
+		<item>
+			<res.users>1</res.users>
+			<__last_update>2017-06-26 21:17:38</__last_update>
+			<id>1</id>
+			<write_date>2017-06-26 21:17:38</write_date>
+			<write_uid>
+				<item>1</item>
+				<item>Administrator</item>
+			</write_uid>
+		</item>
+	</log_ids>
+	<groups_id>
+		<item>
+			<res.users>1</res.users>
+			<display_name>Administration / Access Rights</display_name>
+			<id>3</id>
+			<full_name>Administration / Access Rights</full_name>
+		</item>
+		<item>
+			<res.users>1</res.users>
+			<display_name>Employees / Employee</display_name>
+			<id>1</id>
+			<full_name>Employees / Employee</full_name>
+		</item>
+		<item>
+			<res.users>1</res.users>
+			<display_name>Administration / Settings</display_name>
+			<id>4</id>
+			<full_name>Administration / Settings</full_name>
+		</item>
+		<item>
+			<res.users>1</res.users>
+			<display_name>Extra Rights / Technical Features</display_name>
+			<id>7</id>
+			<full_name>Extra Rights / Technical Features</full_name>
+		</item>
+		<item>
+			<res.users>5</res.users>
+			<display_name>Extra Rights / Contact Creation</display_name>
+			<id>8</id>
+			<full_name>Extra Rights / Contact Creation</full_name>
+		</item>
+		<item>
+			<res.users>5</res.users>
+			<display_name>Employees / Employee</display_name>
+			<id>1</id>
+			<full_name>Employees / Employee</full_name>
+		</item>
+		<item>
+			<res.users>5</res.users>
+			<display_name>Extra Rights / Technical Features</display_name>
+			<id>7</id>
+			<full_name>Extra Rights / Technical Features</full_name>
+		</item>
+		<item>
+			<res.users>6</res.users>
+			<display_name>Administration / Access Rights</display_name>
+			<id>3</id>
+			<full_name>Administration / Access Rights</full_name>
+		</item>
+		<item>
+			<res.users>6</res.users>
+			<display_name>Extra Rights / Contact Creation</display_name>
+			<id>8</id>
+			<full_name>Extra Rights / Contact Creation</full_name>
+		</item>
+		<item>
+			<res.users>6</res.users>
+			<display_name>Employees / Employee</display_name>
+			<id>1</id>
+			<full_name>Employees / Employee</full_name>
+		</item>
+		<item>
+			<res.users>6</res.users>
+			<display_name>Extra Rights / Multi Currencies</display_name>
+			<id>6</id>
+			<full_name>Extra Rights / Multi Currencies</full_name>
+		</item>
+		<item>
+			<res.users>6</res.users>
+			<display_name>Other Extra Rights / Portal</display_name>
+			<id>9</id>
+			<full_name>Other Extra Rights / Portal</full_name>
+		</item>
+		<item>
+			<res.users>6</res.users>
+			<display_name>Other Extra Rights / Public</display_name>
+			<id>10</id>
+			<full_name>Other Extra Rights / Public</full_name>
+		</item>
+		<item>
+			<res.users>6</res.users>
+			<display_name>Extra Rights / Technical Features</display_name>
+			<id>7</id>
+			<full_name>Extra Rights / Technical Features</full_name>
+		</item>
+	</groups_id>
+</odoo>

@@ -144,7 +144,7 @@ class jasper_report(models.Model):
         designs = {}
         compileds = {}
         # Fill binary reports
-        if self.jasper_jasper_file:
+        if self.jasper_jrxml_file:
             designs['main'] = decodestring(self.jasper_jrxml_file)
         
         if self.jasper_jasper_file:
