@@ -11,16 +11,16 @@ from jnius import autoclass
 
 JRXML_FILE = 'Users.jrxml'
 JASPER_FILE = 'Users.jasper'
-JSON_FILE = 'Users.json'
-PDF_FILE  = 'Ussers.pdf'
+JSON_FILE = 'res.users.json'
+PDF_FILE  = 'Users.pdf'
 TMP_DIRECTORY = '/var/jaspertemp'
 
 if __name__ == '__main__':
     jrxml_files = {}
-    jrxml_files['main'] = open(JRXML_FILE).read()
+    jrxml_files['main'] = open(JRXML_FILE, 'rb').read()
     
     jasper_files = {}
-    jasper_files['main'] = open(JASPER_FILE).read()
+    #jasper_files['main'] = open(JASPER_FILE, 'rb').read()
     
     jasper = JasperInterface(jrxml_files, jasper_files, TMP_DIRECTORY)
     
@@ -31,9 +31,4 @@ if __name__ == '__main__':
     except:
         pass
 
-    try:
-        os.remove(HTML_FILE)
-    except:
-        pass
-    
     open(PDF_FILE, 'wb').write(jasper.generate(json_dict, 'PDF'))

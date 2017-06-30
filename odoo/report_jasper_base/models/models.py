@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from JasperInterface import JasperInterface, dictionary_to_xml, temp_file_name
+from JasperInterface import JasperInterface, dictionary_to_xml, dictionary_to_json, temp_file_name
 from dbus.proxies import Interface
 from base64 import encodestring, decodestring
 
@@ -87,6 +87,30 @@ class jasper_report(models.Model):
         jasper_data[self.model].append(record)
         
     @api.multi
+    def get_json_sample(self):
+        model_class = self.env[self.model]
+        
+        # load 10 first records
+        ids = model_class.search([], limit=10)
+
+        # convert do dictionary data
+        jasper_data = self.generate_model_data(ids)       
+        
+        #Generate temp xml file
+        json_stream = dictionary_to_json(jasper_data)
+        json_file = temp_file_name(self.get_temp_dir(), 'json')
+        
+        file = open(json_file, 'wb')
+        file.write(json_stream)
+        file.close()
+        
+        return {
+             'type' : 'ir.actions.act_url',
+             'url': '/web/binary/download_document?path=%s&filename=%s.json'%(json_file, self.model),
+             'target': 'self',
+             }
+        
+    @api.multi
     def get_xml_sample(self):
         model_class = self.env[self.model]
         
@@ -98,7 +122,7 @@ class jasper_report(models.Model):
         
         #Generate temp xml file
         xml_stream = dictionary_to_xml(jasper_data)
-        xml_file = temp_file_name(self.get_temp_dir())
+        xml_file = temp_file_name(self.get_temp_dir(), 'xml')
         
         file = open(xml_file, 'wb')
         file.write(xml_stream)

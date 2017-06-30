@@ -1,0 +1,144 @@
+{
+  "odoo": {
+    "res.users": [
+      {
+        "city": "Scranton", 
+        "partner_id.display_name": "YourCompany, Administrator", 
+        "display_name": "Administrator", 
+        "name": "Administrator", 
+        "partner_id.id": 3, 
+        "email": "admin@yourcompany.example.com", 
+        "partner_id.name": "Administrator", 
+        "id": 1
+      }, 
+      {
+        "city": "Namur (Loyers)", 
+        "partner_id.display_name": "YourCompany, Demo User", 
+        "display_name": "Demo User", 
+        "name": "Demo User", 
+        "partner_id.id": 6, 
+        "email": "demo@yourcompany.example.com", 
+        "partner_id.name": "Demo User", 
+        "id": 5
+      }, 
+      {
+        "city": false, 
+        "partner_id.display_name": "dummy", 
+        "display_name": "dummy", 
+        "name": "dummy", 
+        "partner_id.id": 43, 
+        "email": "dummy@yourcompany.com", 
+        "partner_id.name": "dummy", 
+        "id": 6
+      }
+    ], 
+    "log_ids": [
+      {
+        "res.users": 1, 
+        "write_uid": [
+          1, 
+          "Administrator"
+        ], 
+        "id": 2, 
+        "write_date": "2017-06-30 15:22:56", 
+        "__last_update": "2017-06-30 15:22:56"
+      }, 
+      {
+        "res.users": 1, 
+        "write_uid": [
+          1, 
+          "Administrator"
+        ], 
+        "id": 1, 
+        "write_date": "2017-06-26 21:17:38", 
+        "__last_update": "2017-06-26 21:17:38"
+      }
+    ], 
+    "groups_id": [
+      {
+        "res.users": 1, 
+        "display_name": "Administration / Access Rights", 
+        "id": 3, 
+        "full_name": "Administration / Access Rights"
+      }, 
+      {
+        "res.users": 1, 
+        "display_name": "Employees / Employee", 
+        "id": 1, 
+        "full_name": "Employees / Employee"
+      }, 
+      {
+        "res.users": 1, 
+        "display_name": "Administration / Settings", 
+        "id": 4, 
+        "full_name": "Administration / Settings"
+      }, 
+      {
+        "res.users": 1, 
+        "display_name": "Extra Rights / Technical Features", 
+        "id": 7, 
+        "full_name": "Extra Rights / Technical Features"
+      }, 
+      {
+        "res.users": 5, 
+        "display_name": "Extra Rights / Contact Creation", 
+        "id": 8, 
+        "full_name": "Extra Rights / Contact Creation"
+      }, 
+      {
+        "res.users": 5, 
+        "display_name": "Employees / Employee", 
+        "id": 1, 
+        "full_name": "Employees / Employee"
+      }, 
+      {
+        "res.users": 5, 
+        "display_name": "Extra Rights / Technical Features", 
+        "id": 7, 
+        "full_name": "Extra Rights / Technical Features"
+      }, 
+      {
+        "res.users": 6, 
+        "display_name": "Administration / Access Rights", 
+        "id": 3, 
+        "full_name": "Administration / Access Rights"
+      }, 
+      {
+        "res.users": 6, 
+        "display_name": "Extra Rights / Contact Creation", 
+        "id": 8, 
+        "full_name": "Extra Rights / Contact Creation"
+      }, 
+      {
+        "res.users": 6, 
+        "display_name": "Employees / Employee", 
+        "id": 1, 
+        "full_name": "Employees / Employee"
+      }, 
+      {
+        "res.users": 6, 
+        "display_name": "Extra Rights / Multi Currencies", 
+        "id": 6, 
+        "full_name": "Extra Rights / Multi Currencies"
+      }, 
+      {
+        "res.users": 6, 
+        "display_name": "Other Extra Rights / Portal", 
+        "id": 9, 
+        "full_name": "Other Extra Rights / Portal"
+      }, 
+      {
+        "res.users": 6, 
+        "display_name": "Other Extra Rights / Public", 
+        "id": 10, 
+        "full_name": "Other Extra Rights / Public"
+      }, 
+      {
+        "res.users": 6, 
+        "display_name": "Extra Rights / Technical Features", 
+        "id": 7, 
+        "full_name": "Extra Rights / Technical Features"
+      }
+    ]
+  }
+}

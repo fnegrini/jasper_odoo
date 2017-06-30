@@ -11,6 +11,9 @@ import codecs
 from jnius import autoclass
 from dicttoxml import dicttoxml
 from xml.dom.minidom import parseString
+import pprint
+import collections
+import json
 
 # Java base classes
 JMap       = autoclass('java.util.HashMap')
@@ -30,6 +33,7 @@ JasperCompileManager = autoclass('net.sf.jasperreports.engine.JasperCompileManag
 JasperDesign = autoclass('net.sf.jasperreports.engine.design.JasperDesign')
 JRXmlLoader = autoclass('net.sf.jasperreports.engine.xml.JRXmlLoader')
 JRXmlUtils  = autoclass('net.sf.jasperreports.engine.util.JRXmlUtils')
+JRLoader = autoclass('net.sf.jasperreports.engine.util.JRLoader')
 JRCsvExporter = autoclass('net.sf.jasperreports.engine.export.JRCsvExporter')
 JRRtfExporter = autoclass('net.sf.jasperreports.engine.export.JRRtfExporter')
 JRHtmlExporter = autoclass('net.sf.jasperreports.engine.export.JRHtmlExporter')
@@ -50,13 +54,12 @@ def gen_uuid():
     """Generates an hopfully unique ID."""
     return md5.new("%s-%f" % (time.time(), random.random())).hexdigest()
 
-def temp_file_name(tempdir, extention):
+def temp_file_name(tempdir, extention = 'TMP'):
     #ensure_dirs([tempdir])
     return os.path.join(tempdir, gen_uuid() + '.' + extention)
     
 def stream_to_java_file(tempdir, stream, extention = 'TMP'):
     tmp_filename = temp_file_name(tempdir, extention)
-    #pfile = codecs.open(tmp_filename, 'wb', 'utf-8')
     pfile = open(tmp_filename, 'wb')
     pfile.write(stream)
     pfile.close()
@@ -77,6 +80,22 @@ def compile_jrxml(tempdir, designdata):
     file.delete()
     return compiled
 
+def convert_unicode_dict(data):
+    if isinstance(data, basestring):
+        return str(data)
+    elif isinstance(data, collections.Mapping):
+        return dict(map(convert_unicode_dict, data.iteritems()))
+    elif isinstance(data, collections.Iterable):
+        return type(data)(map(convert_unicode_dict, data))
+    else:
+        return data
+    
+    
+def dictionary_to_json(dict_data):
+    outdict = {'odoo': convert_unicode_dict(dict_data)}
+    json_stream = json.dumps(outdict, indent=2)
+    return json_stream
+    
 def dictionary_to_xml(dict_data):
     xml_string = dicttoxml(dict_data, root=True, custom_root='odoo', attr_type=False)
     xml = parseString(xml_string)
@@ -101,7 +120,7 @@ class JasperInterface:
         for design_name in jrxml_list:
             if design_name in jasper_list:
                 file = stream_to_java_file(self.tempdir, jasper_list[design_name], 'jasper')
-                self.compiled_design[design_name] = JRXmlLoader.load(file)
+                self.compiled_design[design_name] = JRLoader.loadObject(file)
                 #file.delete()
             else:
                 self.compiled_design[design_name] = compile_jrxml(self.tempdir, jrxml_list[design_name])
