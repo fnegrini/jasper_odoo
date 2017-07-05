@@ -38,7 +38,7 @@ When this module is in use, it creates temporary files in order to generate the 
 #sudo chmod u+rw /var/jaspertemp
 ```
 
-# Designing your first report
+# Designing a report
 After activate the *developer mode*, you can create reports under the action -> reports on Settings menu.
 Create a new folder choosing _Jasper_ as *Report Type*. After that, new options appear on *Jasper" tab.
 
@@ -55,9 +55,9 @@ The XML structure is something like this:
 		<item>
 			<field1>value_of_field1</field1>
 			<field2>value_of_field2</field2>
-      <many2one_field.subfield>value subfield</field2>
+			<many2one_field.subfield>value subfield</many2one_field.subfield>
 		</item>
-    ...
+			...
 	</model_name>
 	<one2many_field>
 		<item>
@@ -65,7 +65,7 @@ The XML structure is something like this:
 			<field1>value_of_field1</field2>
 			<field2>value_of_field2</field2>
 		</item>
-    ...
+			...
 	<one2many_field>
 </odoo>
 ```
