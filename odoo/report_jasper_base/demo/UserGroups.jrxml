@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-07-05T17:16:56 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="UserGroups" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="817a6c7e-ac66-4904-a187-382554a08d9b">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="XML Users"/>
+	<parameter name="user" class="java.lang.String"/>
+	<queryString language="xPath">
+		<![CDATA[/odoo/groups_id/item[res.users='$P{user}']]]>
+	</queryString>
+	<field name="res.users" class="java.lang.String">
+		<fieldDescription><![CDATA[res.users]]></fieldDescription>
+	</field>
+	<field name="display_name" class="java.lang.String">
+		<fieldDescription><![CDATA[display_name]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.String">
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement mode="Opaque" x="180" y="0" width="395" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="39c571f0-22ef-4a55-8a68-8a524672e2a3"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Groups]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="180" y="0" width="395" height="21" uuid="6f9f5105-7c00-453a-8e9e-b9be24b5c9cc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{display_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

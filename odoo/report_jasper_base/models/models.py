@@ -20,9 +20,9 @@ class jasper_report(models.Model):
                                            ("XML", "XML")],\
                                             string = 'Output format')
     
-    jasper_jrxml_file = fields.Binary(string='Design file', filters='*.jrxml')
+    jasper_jrxml_file = fields.Binary(string='Design file (.jrxml)', filters='*.jrxml')
     
-    jasper_jasper_file = fields.Binary(string='Compiled file', filters='*.jasper')
+    jasper_jasper_file = fields.Binary(string='Compiled file (.jasper)', filters='*.jasper')
     
     sub_reports = fields.One2many('jasper.sub.report', 'report', string='Subreports')
     
@@ -203,9 +203,9 @@ class jasper_sub_report(models.Model):
     
     param_name = fields.Char(String='Param Name', size=30, required=True, translate=False)
     
-    jasper_jrxml_file = fields.Binary(string='Design file', filters='*.jrxml')
+    jasper_jrxml_file = fields.Binary(string='Design file (.jrxml)', filters='*.jrxml')
     
-    jasper_jasper_file = fields.Binary(string='Compiled file', filters='*.jasper')
+    jasper_jasper_file = fields.Binary(string='Compiled file (.jasper)', filters='*.jasper')
 
 
 class jasper_model_field(models.Model):

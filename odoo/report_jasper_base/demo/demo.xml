@@ -1,30 +1,23 @@
 <odoo>
     <data>
-        <!--  -->
-        <!--   <record id="object0" model="report_jasper_base.report_jasper_base"> -->
-        <!--     <field name="name">Object 0</field> -->
-        <!--     <field name="value">0</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object1" model="report_jasper_base.report_jasper_base"> -->
-        <!--     <field name="name">Object 1</field> -->
-        <!--     <field name="value">10</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object2" model="report_jasper_base.report_jasper_base"> -->
-        <!--     <field name="name">Object 2</field> -->
-        <!--     <field name="value">20</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object3" model="report_jasper_base.report_jasper_base"> -->
-        <!--     <field name="name">Object 3</field> -->
-        <!--     <field name="value">30</field> -->
-        <!--   </record> -->
-        <!--  -->
-        <!--   <record id="object4" model="report_jasper_base.report_jasper_base"> -->
-        <!--     <field name="name">Object 4</field> -->
-        <!--     <field name="value">40</field> -->
-        <!--   </record> -->
-        <!--  -->
+    	<!--Demo user report -->
+		<record id="demo_user_report" model="ir.actions.report.xml"> 
+			<field name="name">Demo User Jasper Report</field> 
+			<field name="report_type">jasper</field> 
+			<field name="report_name">User Groups</field> 
+			<field name="jasper_output_type">PDF</field> 
+			<field name="model">res.users</field> 
+			<field name="jasper_jrxml_file"  type="base64" file="report_jasper_base/demo/Users.jrxml"></field> 
+			<field name="jasper_jasper_file" type="base64" file="report_jasper_base/demo/Users.jasper"></field>
+		</record> 
+
+		<record id="demo_user_sub_report" model="jasper.sub.report"> 
+			<field name="report" eval="demo_user_report"></field>
+			<field name="param_name">groups</field> 
+			<field name="jasper_jrxml_file"  type="base64" file="report_jasper_base/demo/UserGroups.jrxml"></field> 
+			<field name="jasper_jasper_file" type="base64" file="report_jasper_base/demo/UserGroups.jasper"></field>
+		</record> 
+
     </data>
+    
 </odoo>
