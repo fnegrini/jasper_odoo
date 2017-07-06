@@ -39,6 +39,7 @@ When this module is in use, it creates temporary files in order to generate the 
 ```
 
 # Designing a report
+This documentation does not detail Jasper Studio process, only the module particularities. For further documentation about Jasper Studio, refer to: http://community.jaspersoft.com/documentation
 After activate the *developer mode*, you can create reports under the action -> reports on Settings menu.
 Create a new folder choosing _Jasper_ as *Report Type*. After that, new options appear on *Jasper" tab.
 
@@ -83,4 +84,21 @@ One2Many fields and Many2Many fields are exported as an extra source. The refere
 Once you designed and tested your Jasper report with the XML sample file. You need only to upload the *jrxml* and *jasper* files to the *Design file (jrxml)* and *Compiled file (.jasper)* fields respectively on the report action and save your report. After that just click on "Add report to model" button and done! Go to your folder menu, select one or several records and call your jasper report.
 
 # Working with subreports
-TO DO!
+To work with subreports, you can use any One2Many or Many2Many field of your model as data source. Once one field of theese kind is added to the model report, it is exported as an extra datasource withe the name as the field model name. A field named as the upper model is inserted to be used as query on your XPath param.
+
+## Before use subreports
+When you are developing reports with subreports the *Expression* parameter of your subreport object on main report is a path to the subreport file. Unfortunally, when it comes to odoo there are no more file system and everything is in memory. So, for the module be able to work with subreports, theese are passed as parameters to main report. Because of this feature a few additional steps are needed before upload your reports to odoo as follow:
+
+### Main report
+ - On the main report, create a param of type java.lang.Object and name him for example, _mysubreport_
+ - On your subreport object, change the *Expression* field (with should have a path to the subreport) for the value: _$P{mysubreport}_. This will set the report to send a param named _mysubreport_ as the subreport content.
+ - Stil on subreport object, click on *Edit Parameters* and add the following parameter: _XML_DATA_DOCUMENT = $P{XML_DATA_DOCUMENT}_. This will force the report to send the XML as source for subreport
+
+Once you have done all this, compile and upload your jasper files (jrxml and jasper) to your report on odoo.
+
+### Subreport(s)
+
+I presume you have already created the paramenter on the subreport to set the ID to be used as filter on your XPath. All this structure works properly on odoo. So, once the main report was adapted to work in the module, the only concern before you upload your subreport files is the *Param* field. It should have the same name as the parameter created to handle the subreport on main report.
+
+# Advanced reports
+Development pending, comming soon!
