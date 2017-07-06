@@ -11,11 +11,68 @@
 			<field name="jasper_jasper_file" type="base64" file="report_jasper_base/demo/Users.jasper"></field>
 		</record> 
 
+		<!--Demo user sub report -->
 		<record id="demo_user_sub_report" model="jasper.sub.report"> 
 			<field name="report" eval="demo_user_report"></field>
 			<field name="param_name">groups</field> 
 			<field name="jasper_jrxml_file"  type="base64" file="report_jasper_base/demo/UserGroups.jrxml"></field> 
 			<field name="jasper_jasper_file" type="base64" file="report_jasper_base/demo/UserGroups.jasper"></field>
+		</record> 
+
+		<!--Demo user link action -->
+		<record id="demo_user_link_action" model="ir.values"> 
+			<field name="name">Demo Jasper Report</field>
+			<field name="model">res.users</field>
+			<field name="key2">client_print_multi</field>
+			<field name="value" eval="'ir.actions.report.xml,' + str(ref('demo_user_report'))"></field>
+		</record> 
+
+		<!--Demo user res.user fields -->
+		<record id="demo_user_field_name" model="jasper.model.field"> 
+			<field name="report" eval="demo_user_report"></field>
+			<field name="field" search = "[('model', '=', 'res.users'), ('name', '=', 'name')]"></field>
+		</record> 
+
+		<record id="demo_user_field_city" model="jasper.model.field"> 
+			<field name="report" eval="demo_user_report"></field>
+			<field name="field" search = "[('model', '=', 'res.users'), ('name', '=', 'city')]"></field>
+		</record> 
+
+		<record id="demo_user_field_display_name" model="jasper.model.field"> 
+			<field name="report" eval="demo_user_report"></field>
+			<field name="field" search = "[('model', '=', 'res.users'), ('name', '=', 'display_name')]"></field>
+		</record> 
+
+		<record id="demo_user_field_email" model="jasper.model.field"> 
+			<field name="report" eval="demo_user_report"></field>
+			<field name="field" search = "[('model', '=', 'res.users'), ('name', '=', 'email')]"></field>
+		</record> 
+
+		<record id="demo_user_field_partner_id" model="jasper.model.field"> 
+			<field name="report" eval="demo_user_report"></field>
+			<field name="field" search = "[('model', '=', 'res.users'), ('name', '=', 'partner_id')]"></field>
+		</record> 
+
+		<record id="demo_user_field_groups_id" model="jasper.model.field"> 
+			<field name="report" eval="demo_user_report"></field>
+			<field name="field" search = "[('model', '=', 'res.users'), ('name', '=', 'groups_id')]"></field>
+		</record> 
+
+		<!--Demo user partner_id sub-fields -->
+		<record id="demo_user_subfld_partner_disp_name" model="jasper.sub.model.field"> 
+			<field name="field" eval="demo_user_field_partner_id"></field>
+			<field name="sub_model_field" search = "[('model', '=', 'res.partner'), ('name', '=', 'display_name')]"></field>
+		</record> 
+
+		<record id="demo_user_subfld_partner_name" model="jasper.sub.model.field"> 
+			<field name="field" eval="demo_user_field_partner_id"></field>
+			<field name="sub_model_field" search = "[('model', '=', 'res.partner'), ('name', '=', 'name')]"></field>
+		</record> 
+
+		<!--Demo user groups_id sub-fields -->
+		<record id="demo_user_subfld_groups_disp_name" model="jasper.sub.model.field"> 
+			<field name="field" eval="demo_user_field_groups_id"></field>
+			<field name="sub_model_field" search = "[('model', '=', 'res.groups'), ('name', '=', 'display_name')]"></field>
 		</record> 
 
     </data>
