@@ -20,12 +20,12 @@ For ubuntu distributions, dicttoxml can be installed through PIP installer:
 ## Check/create environment variables
 For ubuntu distributions, you can set the environment variables at /etc/environment file. Edit this file in order to set the variables every time your system run.
 
-##JAVA_HOME
+## JAVA_HOME
 For correct use of JNI interface, environment variable JAVA_HOME should be set. Below a default value for this variable, check your Java installation first!
 ```
 JAVA_HOME="/usr/lib/jvm/default-java"
 ```
-##CLASSPATH
+## CLASSPATH
 To easy distribute this module, all jar files were inserted in this repository under /java folder. So, the easier way to JNI access these files is set CLASSPATH with this folder. Bellow an example of CLASSPATH if the repository was clonned in /opt/odoo/jasper/ folder:
 ```
 CLASSPATH="/opt/odoo/jasper/jasper_odoo/java/*"
@@ -40,6 +40,7 @@ When this module is in use, it creates temporary files in order to generate the 
 
 # Designing a report
 This documentation does not detail Jasper Studio process, only the module particularities. For further documentation about Jasper Studio, refer to: http://community.jaspersoft.com/documentation
+
 After activate the *developer mode*, you can create reports under the action -> reports on Settings menu.
 Create a new folder choosing _Jasper_ as *Report Type*. After that, new options appear on *Jasper" tab.
 
@@ -81,10 +82,10 @@ You can choose the subfields of your model on the fields screen.
 One2Many fields and Many2Many fields are exported as an extra source. The reference to the model is created with a field with the model name on this extra source. You can use thees extra source on your subreport (check next topic)
 
 ## Uploading Jasper fields
-Once you designed and tested your Jasper report with the XML sample file. You need only to upload the *jrxml* and *jasper* files to the *Design file (jrxml)* and *Compiled file (.jasper)* fields respectively on the report action and save your report. After that just click on "Add report to model" button and done! Go to your folder menu, select one or several records and call your jasper report.
+Once you designed and tested your Jasper report with the XML sample file. You need only to upload the *jrxml* and *jasper* files to the *Design file (jrxml)* and *Compiled file (.jasper)* fields respectively on the report action and save your report. After that just click on "Add report to model" button and done! Go to your model menu, select one or several records and call your jasper report.
 
 # Working with subreports
-To work with subreports, you can use any One2Many or Many2Many field of your model as data source. Once one field of theese kind is added to the model report, it is exported as an extra datasource withe the name as the field model name. A field named as the upper model is inserted to be used as query on your XPath param.
+To work with subreports, you can use any One2Many or Many2Many field of your model as data source. Once one field of theese kind is added to the model report, it is exported as an extra datasource with the name as the field model name. A field named as the upper model is inserted to your field list to be used as query on your XPath param.
 
 ## Before use subreports
 When you are developing reports with subreports the *Expression* parameter of your subreport object on main report is a path to the subreport file. Unfortunally, when it comes to odoo there are no more file system and everything is in memory. So, for the module be able to work with subreports, theese are passed as parameters to main report. Because of this feature a few additional steps are needed before upload your reports to odoo as follow:
