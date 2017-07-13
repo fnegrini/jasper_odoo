@@ -6,6 +6,7 @@ from dbus.proxies import Interface
 from base64 import encodestring, decodestring
 
 JASPER_DATA = 'jasper_data'
+JASPER_IDS = 'jasper_ids'
 
 class jasper_report(models.Model):
     _inherit = 'ir.actions.report.xml'
@@ -158,10 +159,16 @@ class jasper_report(models.Model):
         self.ensure_one()
         
         # if data['jasper_data'] does not generate data from model
-        if JASPER_DATA in data:
-            jasper_data = data[JASPER_DATA]
+        if JASPER_DATA in self.env.context:
+            
+            jasper_data = self.env.context[JASPER_DATA]
+            
         else:
-            model_ids = self.env[self.model].browse(res_ids)
+            if JASPER_IDS in self.env.context:
+                model_ids = self.env[self.model].browse(self.env.context[JASPER_IDS])
+            else:
+                model_ids = self.env[self.model].browse(res_ids)
+                
             jasper_data = self.generate_model_data(model_ids)
         
         
@@ -191,9 +198,11 @@ class jasper_report(models.Model):
             
     @api.model
     def render_report(self, res_ids, name, data):
-        uid = self.env.context['params']['action']
-        report = self.browse(uid)
-        return report.generate_report(res_ids, name, data)
+        reports = self.search([('report_name', '=', name), ('report_type', '=', 'jasper')])
+        if reports:
+            return reports[0].generate_report(res_ids, name, data)
+        
+        return super(jasper_report, self).render_report(res_ids, name, data)
         
     
 class jasper_sub_report(models.Model):
