@@ -4,6 +4,7 @@ from odoo import models, fields, api
 from JasperInterface import JasperInterface, dictionary_to_xml, dictionary_to_json, temp_file_name
 from dbus.proxies import Interface
 from base64 import encodestring, decodestring
+import collections
 
 JASPER_DATA = 'jasper_data'
 JASPER_IDS = 'jasper_ids'
@@ -60,6 +61,17 @@ class jasper_report(models.Model):
         
         return fields
     
+    def split_dictionary_field(self, new_record, record, field_name):
+        
+        for field in record[field_name]:
+            new_field = field_name + '.' + field
+            new_record[new_field] = data_dict[field]
+            
+        
+    def split_tuple_field(self, new_record, record, field):
+        new_record[field+'.id'] = record[field][0]
+        new_record[field+'.name'] = record[field][1]
+           
     def generate_data_for_record(self, jasper_data, id, map_fields):
 
         record = id.read(map_fields['normal'])[0]
@@ -69,8 +81,6 @@ class jasper_report(models.Model):
                 m2o_fields = id[m2o_fld['field']].read(m2o_fld['sub_fields'])[0]
                 for m2o_field in m2o_fields:
                     field_name = m2o_fld['field'] + '.' + m2o_field
-                    record[field_name] = m2o_fields[m2o_field]
-                    
         #one2many subrecords
         for o2m_fld in map_fields['one2many']:
             results_o2m = id[o2m_fld['field']].read(o2m_fld['sub_fields'])
@@ -84,8 +94,19 @@ class jasper_report(models.Model):
             for result_m2m in results_m2m:
                 result_m2m[self.model] = id.id
                 jasper_data[m2m_fld['field']].append(result_m2m)
+                
+        new_record = {}
         
-        jasper_data[self.model].append(record)
+        # Eliminate tuples and dictionaries - a flat record
+        for field in record:
+            if isinstance(record[field], collections.Mapping):
+                self.split_dictionary_field(new_record, record, field)
+            elif isinstance(record[field], tuple):
+                self.split_tuple_field(new_record, record, field)
+            else:
+                new_record[field] = record[field]
+        
+        jasper_data[self.model].append(new_record)
         
     @api.multi
     def get_json_sample(self):
