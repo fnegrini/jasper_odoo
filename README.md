@@ -101,5 +101,38 @@ Once you have done all this, compile and upload your jasper files (jrxml and jas
 
 I presume you have already created the paramenter on the subreport to set the ID to be used as filter on your XPath. All this structure works properly on odoo. So, once the main report was adapted to work in the module, the only concern before you upload your subreport files is the *Param* field. It should have the same name as the parameter created to handle the subreport on main report.
 
-# Advanced reports
-Development pending, comming soon!
+# Calling report from code
+So far, we were able to create a report and call it from a tree view of our model. Now let's suppose you need to call your report from a button for example. In this case you can call as any other report on odoo with the difference you will need to send the data to render your report. For this case, there are two ways to send your data
+
+## Calling report sending model ids
+
+Suppose you need to call your report from a wizard where you can get all ids from your model trough a python code. In this case, you just need to send your ids in the context with the dictionary value *jasper_ids*. Check the sample below:
+
+```python
+
+	context = {}
+	context['jasper_ids'] = [1,2,3]
+
+	return {
+	    'type': 'ir.actions.report.xml',
+	    'report_name': 'my_jasper_report_name',
+	    'context' : context
+	}
+```
+
+## Calling report sending full data
+
+This is the case in wich your data will be completely generated in your code. In this case you need to send your values in the dictionary value *jasper_data*. Your data will be directely converted to XML using dicttoxml and then sent to your jasper report in a XML document. All the model definition is ignored and only the report files are used. Check the sample below:
+
+```python
+
+	context = {}
+	context['jasper_data'] = {} 
+	context['jasper_data']['mylist'] = [{'name':'John', 'age': 17},{'name':'Mary', 'age':17}]
+
+	return {
+	    'type': 'ir.actions.report.xml',
+	    'report_name': 'my_jasper_report_name',
+	    'context' : context
+	}
+```
