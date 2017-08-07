@@ -75,12 +75,19 @@ class jasper_report(models.Model):
     def generate_data_for_record(self, jasper_data, id, map_fields):
 
         record = id.read(map_fields['normal'])[0]
+        
         #many2one fields
         for m2o_fld in map_fields['many2one']:
-            if id[m2o_fld['field']]:
+            
+            field_name = m2o_fld['field']
+            record[field_name + '.id'] = id[m2o_fld['field']].id
+            record[field_name + '.name'] = id[m2o_fld['field']].name
+            if len(m2o_fld['sub_fields']) > 0:
                 m2o_fields = id[m2o_fld['field']].read(m2o_fld['sub_fields'])[0]
                 for m2o_field in m2o_fields:
                     field_name = m2o_fld['field'] + '.' + m2o_field
+                    record[field_name] = m2o_fields[m2o_field]
+                    
         #one2many subrecords
         for o2m_fld in map_fields['one2many']:
             results_o2m = id[o2m_fld['field']].read(o2m_fld['sub_fields'])
