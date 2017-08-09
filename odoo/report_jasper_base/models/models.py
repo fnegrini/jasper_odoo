@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from JasperInterface import JasperInterface, dictionary_to_xml, dictionary_to_json, temp_file_name
+from JasperInterface import JasperInterface, dictionary_to_xml, dictionary_to_json, temp_file_name, convert_unicode_dict
 from dbus.proxies import Interface
 from base64 import encodestring, decodestring
 import collections
@@ -198,7 +198,6 @@ class jasper_report(models.Model):
                 model_ids = self.env[self.model].browse(res_ids)
                 
             jasper_data = self.generate_model_data(model_ids)
-        
         
         designs = {}
         compileds = {}

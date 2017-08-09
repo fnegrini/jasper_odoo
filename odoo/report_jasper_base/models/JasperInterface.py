@@ -99,7 +99,7 @@ def dictionary_to_json(dict_data):
 def dictionary_to_xml(dict_data):
     xml_string = dicttoxml(dict_data, root=True, custom_root='odoo', attr_type=False)
     xml = parseString(xml_string)
-    return xml.toprettyxml()
+    return xml.toprettyxml(encoding = 'UTF-8')
 
 class JasperInterface:
     """Jasper interface to Odoo models"""
