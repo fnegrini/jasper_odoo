@@ -121,7 +121,7 @@ class JasperInterface:
             if design_name in jasper_list:
                 file = stream_to_java_file(self.tempdir, jasper_list[design_name], 'jasper')
                 self.compiled_design[design_name] = JRLoader.loadObject(file)
-                #file.delete()
+                file.delete()
             else:
                 self.compiled_design[design_name] = compile_jrxml(self.tempdir, jrxml_list[design_name])
     

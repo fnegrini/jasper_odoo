@@ -1,0 +1,212 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* report_jasper_base
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-10 20:53+0000\n"
+"PO-Revision-Date: 2017-08-10 20:53+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: report_jasper_base
+#: selection:ir.actions.report.xml,jasper_output_type:0
+msgid " PDF"
+msgstr " PDF"
+
+#. module: report_jasper_base
+#: selection:ir.actions.report.xml,jasper_output_type:0
+msgid "CSV"
+msgstr "CSV"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_ir_act_report_xml_jasper_jasper_file
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_jasper_jasper_file
+msgid "Compiled file (.jasper)"
+msgstr "Arquivo compilado (.jasper)"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_create_uid
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field_create_uid
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_create_date
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field_create_date
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: report_jasper_base
+#: model:ir.actions.report.xml,name:report_jasper_base.demo_user_report
+msgid "Demo User Jasper Report"
+msgstr "Relatório Demonstração Jasper para Usuário"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_ir_act_report_xml_jasper_jrxml_file
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_jasper_jrxml_file
+msgid "Design file (.jrxml)"
+msgstr "Arquivo Design (.jrxml)"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_display_name
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field_display_name
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_display_name
+msgid "Display Name"
+msgstr "Nome para Exibição"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_field
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field_field
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_model_field_treeview
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_model_field_view
+msgid "Field"
+msgstr "Campo"
+
+#. module: report_jasper_base
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_report_view
+msgid "Get JSON sample file"
+msgstr "Arquivo exemplo JSON"
+
+#. module: report_jasper_base
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_report_view
+msgid "Get XML sample file"
+msgstr "Arquivo exemplo XML"
+
+#. module: report_jasper_base
+#: selection:ir.actions.report.xml,jasper_output_type:0
+msgid "HTML"
+msgstr "HTML"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_id
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field_id
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_id
+msgid "ID"
+msgstr "ID"
+
+#. module: report_jasper_base
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_report_view
+msgid "Jasper Report"
+msgstr "Relatório Jasper"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field___last_update
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field___last_update
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report___last_update
+msgid "Last Modified on"
+msgstr "Última Modificação"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_write_uid
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field_write_uid
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_write_date
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field_write_date
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_write_date
+msgid "Last Updated on"
+msgstr "Última modificação em"
+
+#. module: report_jasper_base
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_report_view
+msgid "Main Report"
+msgstr "Relatório Principal"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_model
+msgid "Model"
+msgstr "Modelo"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_ir_act_report_xml_model_fields
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_report_view
+msgid "Model Fields"
+msgstr "Campos do Modelo"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_ir_act_report_xml_jasper_output_type
+msgid "Output format"
+msgstr "Formato saída"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_param_name
+msgid "Param name"
+msgstr "Nome Parâmetro"
+
+#. module: report_jasper_base
+#: selection:ir.actions.report.xml,jasper_output_type:0
+msgid "Plain text"
+msgstr "Texto"
+
+#. module: report_jasper_base
+#: selection:ir.actions.report.xml,jasper_output_type:0
+msgid "RTF"
+msgstr "RTF"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_report
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_report_report
+msgid "Report"
+msgstr "Relatório"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_sub_model_field_sub_model_field
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_sub_model_field_treeview
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_sub_model_field_view
+msgid "SubModel Field"
+msgstr "Campo do SubModelo"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_jasper_model_field_related_fields
+msgid "SubModel Fields"
+msgstr "Campos do SubModelo"
+
+#. module: report_jasper_base
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_sub_report_treeview
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_sub_report_view
+msgid "Subreport"
+msgstr "Sub-relatório"
+
+#. module: report_jasper_base
+#: model:ir.model.fields,field_description:report_jasper_base.field_ir_act_report_xml_sub_reports
+#: model:ir.ui.view,arch_db:report_jasper_base.jasper_report_view
+msgid "Subreports"
+msgstr "Sub-relatórios"
+
+#. module: report_jasper_base
+#: selection:ir.actions.report.xml,jasper_output_type:0
+msgid "XML"
+msgstr "XML"
+
+#. module: report_jasper_base
+#: model:ir.model,name:report_jasper_base.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
+
+#. module: report_jasper_base
+#: model:ir.model,name:report_jasper_base.model_jasper_model_field
+msgid "jasper.model.field"
+msgstr "jasper.model.field"
+
+#. module: report_jasper_base
+#: model:ir.model,name:report_jasper_base.model_jasper_sub_model_field
+msgid "jasper.sub.model.field"
+msgstr "jasper.sub.model.field"
+
+#. module: report_jasper_base
+#: model:ir.model,name:report_jasper_base.model_jasper_sub_report
+msgid "jasper.sub.report"
+msgstr "jasper.sub.report"
+
