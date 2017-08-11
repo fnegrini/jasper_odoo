@@ -20,16 +20,26 @@ For ubuntu distributions, dicttoxml can be installed through PIP installer:
 ## Check/create environment variables
 For ubuntu distributions, you can set the environment variables at /etc/environment file. Edit this file in order to set the variables every time your system run.
 
-## JAVA_HOME
+### JAVA_HOME
 For correct use of JNI interface, environment variable JAVA_HOME should be set. Below a default value for this variable, check your Java installation first!
 ```
 JAVA_HOME="/usr/lib/jvm/default-java"
 ```
-## CLASSPATH
+### CLASSPATH
 To easy distribute this module, all jar files were inserted in this repository under /java folder. So, the easier way to JNI access these files is set CLASSPATH with this folder. Bellow an example of CLASSPATH if the repository was clonned in /opt/odoo/jasper/ folder:
 ```
 CLASSPATH="/opt/odoo/jasper/jasper_odoo/java/*"
 ```
+
+## Environment variables in services (daemons)
+Some distributions does not recognize the environment variables set in _/etc/environment_ file.
+In this case, an easy workaround is set the environment in the daemon bash file located in _/etc/init.d/_ folder. Add the following lines in your service file to set the environment variables correctly:
+
+```
+export JAVA_HOME="/usr/lib/jvm/default-java"
+export CLASSPATH="/opt/odoo/jasper/jasper_odoo/java/*"
+```
+
 ## Temporary folder
 When this module is in use, it creates temporary files in order to generate the reports. A temporary folder with read an write access to odoo user is needed. The insallation sugest /var/jaspertemp/ (check odoo system parameters after module installed), but you can set any other folder. Below a set of commands to create and set access:
 ```
