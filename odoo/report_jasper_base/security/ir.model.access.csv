@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_report_jasper_base_report_jasper_base,report_jasper_base.report_jasper_base,model_report_jasper_base_report_jasper_base,,1,0,0,0
+access_jasper_sub_report,access_jasper_sub_report,report_jasper_base.model_jasper_sub_report,base.group_user,1,0,0,0
+access_jasper_model_field,access_jasper_model_field,report_jasper_base.model_jasper_model_field,base.group_user,1,0,0,0
+access_jasper_sub_model_field,access_jasper_sub_model_field,report_jasper_base.model_jasper_sub_model_field,base.group_user,1,0,0,0
