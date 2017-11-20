@@ -112,6 +112,11 @@ class jasper_report(models.Model):
                 self.split_tuple_field(new_record, record, field)
             else:
                 new_record[field] = record[field]
+                if type(record[field]) is float:
+                    v_float = str(record[field]).replace('.',',')
+                    new_record[field] = v_float
+                else:
+                    new_record[field] = record[field]
         
         jasper_data[self.model].append(new_record)
         
