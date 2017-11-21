@@ -23,6 +23,7 @@ String = autoclass('java.lang.String')
 StringBufferInputStream = autoclass('java.io.StringBufferInputStream')
 ByteArrayInputStream = autoclass('java.io.ByteArrayInputStream')
 InputSource = autoclass('org.xml.sax.InputSource')
+Locale      = autoclass('java.util.Locale')
 
 #JasperReport Classes
 JRExporterParameter = autoclass('net.sf.jasperreports.engine.JRExporterParameter')
@@ -139,9 +140,11 @@ class JasperInterface:
         xml_document = JRXmlUtils.parse(file)
         
         # passing base parameters
+        us = Locale("en", "US")
         map.put('XML_DATA_DOCUMENT', xml_document)
         map.put('XML_DATE_PATTERN', 'yyyy-MM-dd')
         map.put('XML_NUMBER_PATTERN', '#,##0.##')
+        map.put('XML_LOCALE', us)
         map.put('net.sf.jasperreports.xpath.executer.factory', 'net.sf.jasperreports.engine.util.xml.JaxenXPathExecuterFactory')
         jasper_print = JasperFillManager.fillReport(self.compiled_design['main'], map)
         file.delete()
