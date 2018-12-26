@@ -18,7 +18,7 @@
     'depends': ['base'],
 
     'data': [
-        'security/ir.model.access.csv',
+       # 'security/ir.model.access.csv',
         'data/jasper_data.xml',
         'views/views.xml',
         'views/templates.xml',
