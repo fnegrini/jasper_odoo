@@ -126,7 +126,7 @@ class JasperInterface:
             else:
                 self.compiled_design[design_name] = compile_jrxml(self.tempdir, jrxml_list[design_name])
     
-    def generate(self, dict_data, outputformat = 'PDF'):
+    def generate(self, dict_data, params, outputformat = 'PDF'):
         """Generate Output with JasperReports."""
 
         # convert to a java.util.Map so it can be passed as parameters
@@ -146,6 +146,12 @@ class JasperInterface:
         map.put('XML_NUMBER_PATTERN', '#,##0.##')
         map.put('XML_LOCALE', us)
         map.put('net.sf.jasperreports.xpath.executer.factory', 'net.sf.jasperreports.engine.util.xml.JaxenXPathExecuterFactory')
+        
+        #fill params
+        param_keys = params.keys()
+        for key in param_keys:
+            map.put(key, params[key])
+            
         jasper_print = JasperFillManager.fillReport(self.compiled_design['main'], map)
         file.delete()
         # generate report to file according to format

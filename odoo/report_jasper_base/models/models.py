@@ -8,6 +8,8 @@ import collections
 
 JASPER_DATA = 'jasper_data'
 JASPER_IDS = 'jasper_ids'
+PARAMETERS = 'parameters'
+
 
 class jasper_report(models.Model):
     _inherit = 'ir.actions.report.xml'
@@ -199,8 +201,15 @@ class jasper_report(models.Model):
                 
             jasper_data = self.generate_model_data(model_ids)
         
+        
+        if PARAMETERS in self.env.context:
+            params = self.env.context[PARAMETERS]
+        else:
+            params = {}
+            
         designs = {}
         compileds = {}
+        
         # Fill binary reports
         if self.jasper_jrxml_file:
             designs['main'] = decodestring(self.jasper_jrxml_file)
@@ -218,7 +227,7 @@ class jasper_report(models.Model):
         # call Jasper Interface
         interface = JasperInterface(designs, compileds, self.get_temp_dir())
         
-        report = interface.generate(jasper_data, self.jasper_output_type)
+        report = interface.generate(jasper_data, params, self.jasper_output_type)
         
         # return output file and extension
         return (report, self.jasper_output_type)
