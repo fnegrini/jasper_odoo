@@ -9,11 +9,12 @@ import random
 import codecs
 
 from jnius import autoclass
-from dicttoxml import dicttoxml
 from xml.dom.minidom import parseString
 import pprint
 import collections
 import json
+import dicttoxml
+import logging
 
 # Java base classes
 JMap       = autoclass('java.util.HashMap')
@@ -37,7 +38,7 @@ JRXmlUtils  = autoclass('net.sf.jasperreports.engine.util.JRXmlUtils')
 JRLoader = autoclass('net.sf.jasperreports.engine.util.JRLoader')
 JRCsvExporter = autoclass('net.sf.jasperreports.engine.export.JRCsvExporter')
 JRRtfExporter = autoclass('net.sf.jasperreports.engine.export.JRRtfExporter')
-JRHtmlExporter = autoclass('net.sf.jasperreports.engine.export.JRHtmlExporter')
+JRHtmlExporter = autoclass('net.sf.jasperreports.engine.export.HtmlExporter')
 JRTextExporter = autoclass('net.sf.jasperreports.engine.export.JRTextExporter')
 JRTextExporterParameter = autoclass('net.sf.jasperreports.engine.export.JRTextExporterParameter')
 
@@ -98,7 +99,8 @@ def dictionary_to_json(dict_data):
     return json_stream
     
 def dictionary_to_xml(dict_data):
-    xml_string = dicttoxml(dict_data, root=True, custom_root='odoo', attr_type=False)
+    dicttoxml.LOG.setLevel(logging.ERROR)
+    xml_string = dicttoxml.dicttoxml(dict_data, root=True, custom_root='odoo', attr_type=False)
     xml = parseString(xml_string)
     return xml.toprettyxml(encoding = 'UTF-8')
 

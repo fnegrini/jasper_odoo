@@ -54,12 +54,16 @@ class jasper_report(models.Model):
                 record['sub_fields'] = []
                 # create record with subfields
                 for sub_field in field.related_fields:
-                    record['sub_fields'].append(sub_field.sub_model_field.name)
+                    sub_field_name = sub_field.sub_model_field.name
+                    if (sub_field_name):
+                        record['sub_fields'].append(sub_field_name)
                     
                 
                 fields[field.field.ttype].append(record)
             else:
-              fields['normal'].append(field.field.name)  
+                field_name = field.field.name
+                if(field_name):
+                    fields['normal'].append(field.field.name)  
         
         return fields
     
