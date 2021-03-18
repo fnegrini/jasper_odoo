@@ -4,11 +4,25 @@ from odoo import models, fields, api
 from JasperInterface import JasperInterface, dictionary_to_xml, dictionary_to_json, temp_file_name, convert_unicode_dict
 from dbus.proxies import Interface
 from base64 import encodestring, decodestring
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from datetime import datetime
+
 import collections
 
 JASPER_DATA = 'jasper_data'
 JASPER_IDS = 'jasper_ids'
 PARAMETERS = 'parameters'
+
+
+def convert_date(old_value, old_format, new_format):
+    new_value = old_value
+    try:
+        date = datetime.strptime(old_value, old_format)
+        new_value = date.strftime(new_format)
+    except:
+        pass
+    
+    return new_value
 
 
 class jasper_report(models.Model):
@@ -43,6 +57,7 @@ class jasper_report(models.Model):
         #initialize return mapping
         fields = {}
         fields['normal'] = []
+        fields['date_format'] = {}
         fields['many2many'] = []
         fields['many2one'] = []
         fields['one2many'] = []
@@ -52,11 +67,14 @@ class jasper_report(models.Model):
                 record = {}
                 record['field'] = field.field.name
                 record['sub_fields'] = []
+                record['date_format'] = {}
                 # create record with subfields
                 for sub_field in field.related_fields:
                     sub_field_name = sub_field.sub_model_field.name
                     if (sub_field_name):
                         record['sub_fields'].append(sub_field_name)
+                        if (sub_field.date_format or '') != '':
+                            record['date_format'].update({sub_field_name: (sub_field.sub_model_field.ttype, sub_field.date_format)})
                     
                 
                 fields[field.field.ttype].append(record)
@@ -64,6 +82,8 @@ class jasper_report(models.Model):
                 field_name = field.field.name
                 if(field_name):
                     fields['normal'].append(field.field.name)  
+                    if (field.date_format or '') != '':
+                        fields['date_format'].update({field_name:(field.field.ttype, field.date_format)})
         
         return fields
     
@@ -82,6 +102,18 @@ class jasper_report(models.Model):
 
         record = id.read(map_fields['normal'])[0]
         
+        for date_format_field in map_fields['date_format']:
+            ttype, format = map_fields['date_format'][date_format_field]
+            old_value = record[date_format_field]
+            if ttype == 'date':
+              new_value = convert_date(old_value, DEFAULT_SERVER_DATE_FORMAT, format)
+            elif ttype == 'datetime':
+              new_value = convert_date(old_value, DEFAULT_SERVER_DATETIME_FORMAT, format)
+            else:
+              new_value = old_value
+            
+            record[date_format_field] = new_value
+            
         #many2one fields
         for m2o_fld in map_fields['many2one']:
             
@@ -90,6 +122,20 @@ class jasper_report(models.Model):
             record[field_name + '.name'] = id[m2o_fld['field']].name
             if len(m2o_fld['sub_fields']) > 0:
                 m2o_fields = id[m2o_fld['field']].read(m2o_fld['sub_fields'])[0]
+                
+                #Check Dateformat
+                for date_format_field in m2o_fld['date_format']:
+                    ttype, format = map_fields['date_format'][date_format_field]
+                    old_value = m2o_fields[date_format_field]
+                    if ttype == 'date':
+                        new_value = convert_date(old_value, DEFAULT_SERVER_DATE_FORMAT, format)
+                    elif ttype == 'datetime':
+                        new_value = convert_date(old_value, DEFAULT_SERVER_DATETIME_FORMAT, format)
+                    else:
+                        new_value = old_value
+            
+                    m2o_fields[date_format_field] = new_value
+            
                 for m2o_field in m2o_fields:
                     field_name = m2o_fld['field'] + '.' + m2o_field
                     record[field_name] = m2o_fields[m2o_field]
@@ -170,7 +216,7 @@ class jasper_report(models.Model):
              }
     
     def generate_model_data(self, res_ids):
-        model_class = self.env[self.model]
+        #model_class = self.env[self.model]
         map_fields = self.get_model_fields()
 
         #initialize resultsets
@@ -267,6 +313,8 @@ class jasper_model_field(models.Model):
     model = fields.Char(string="Model", compute='_compute_parent_fields', readonly=True, store=True, size=50)
 
     related_fields = fields.One2many('jasper.sub.model.field', 'field', string='SubModel Fields')
+
+    date_format = fields.Char(string="Date/Time Format", size=30)
  
     @api.one
     @api.depends('field')
@@ -284,7 +332,8 @@ class jasper_sub_model_field(models.Model):
    
     sub_model_field = fields.Many2one('ir.model.fields', string = 'SubModel Field')
  
- 
+    date_format = fields.Char(string="Date/Time Format", size=30)
+
             
         
     

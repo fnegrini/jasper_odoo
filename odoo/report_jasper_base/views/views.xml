@@ -72,6 +72,7 @@
             <tree string="Field">
                 <field name="field" domain="[('model', '=', parent.model)]"/>
                 <field name="model" invisible="0"/>
+                <field name="date_format"/>
             </tree>
         </field>
     </record>
@@ -84,6 +85,7 @@
                 <group>
                     <field name="field" domain="[('model', '=', parent.model)]"/>
                     <field name="model" invisible="0"/>
+                    <field name="date_format"/>
                 </group>
                 <group>
                     <field name="related_fields" widget="one2many_list" />
@@ -99,6 +101,7 @@
         <field name="arch" type="xml">
             <tree string="SubModel Field">
                 <field name="sub_model_field" domain="[('model', '=', parent.model)]"/>
+                <field name="date_format"/>
             </tree>
         </field>
     </record>
@@ -110,6 +113,7 @@
             <form string="SubModel Field">
                 <group>
                     <field name="sub_model_field" domain="[('model', '=', parent.model)]"/>
+                    <field name="date_format"/>
                 </group>
             </form>
         </field>
